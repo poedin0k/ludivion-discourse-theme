@@ -3,5 +3,8 @@
   "about_url": "https://forum.ludivion.com",
   "license_url": null,
   "component": false,
-  "assets": {}
+  "assets": {
+    "forum_hero": "assets/forum-hero.webp",
+    "ludivion_logo": "assets/ludivion-logo.png"
+  }
 }
