@@ -2,3 +2,11 @@ show_ludivion_background:
   default: true
   type: bool
   description: "Enable the Ludivion atmospheric background."
+show_homepage_hero:
+  default: true
+  type: bool
+  description: "Show the City Speaks introduction on the latest-topics homepage."
+show_hall_cards:
+  default: true
+  type: bool
+  description: "Show Community Halls on the latest-topics homepage."

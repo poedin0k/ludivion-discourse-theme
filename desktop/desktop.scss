@@ -1,13 +1,25 @@
 @media (min-width: 1000px) {
-  #main-outlet {
-    margin-top: 54px;
+  body.ludivion-public #main-outlet {
+    padding: var(--lud-space-6);
   }
 
-  .sidebar-wrapper {
-    width: 245px;
+  body.ludivion-home .ludivion-forum-hero,
+  body.ludivion-home .ludivion-halls {
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .topic-list {
-    margin-top: 20px;
+  body.ludivion-topic .topic-body {
+    padding-inline: var(--lud-space-3);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 999px) {
+  .ludivion-halls__grid {
+    gap: var(--lud-space-2);
+  }
+
+  .ludivion-hall-card {
+    padding: var(--lud-space-3);
   }
 }

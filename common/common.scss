@@ -1,574 +1,907 @@
+/* Ludivion V1: one dark palette, one token system, public selectors only. */
 :root {
-  --lud-bg: #070604;
-  --lud-bg-soft: #0d0a06;
-  --lud-panel: rgba(12, 9, 6, 0.9);
-  --lud-panel-strong: rgba(18, 12, 7, 0.96);
+  --lud-bg: #090806;
+  --lud-bg-raised: #100d09;
+  --lud-bg-deep: #060504;
+  --lud-panel: #17120c;
+  --lud-panel-raised: #21180f;
+  --lud-panel-glass: rgba(15, 11, 7, 0.94);
+  --lud-bronze: #af8350;
+  --lud-gold: #d6ac6a;
+  --lud-gold-bright: #f0d39e;
+  --lud-ivory: #f0e6d4;
+  --lud-text: #e8ddc9;
+  --lud-muted: #b9a78b;
+  --lud-dim: #94836a;
+  --lud-danger: #d68072;
+  --lud-success: #92bc8e;
+  --lud-warning: #e3bd7b;
+  --lud-border: rgba(198, 153, 86, 0.27);
+  --lud-border-strong: rgba(231, 187, 112, 0.56);
+  --lud-shadow: 0 18px 54px rgba(0, 0, 0, 0.42);
+  --lud-glow: 0 0 25px rgba(214, 172, 106, 0.13);
+  --lud-radius: 8px;
+  --lud-space-1: 4px;
+  --lud-space-2: 8px;
+  --lud-space-3: 12px;
+  --lud-space-4: 16px;
+  --lud-space-5: 24px;
+  --lud-space-6: 32px;
+  --lud-display: Georgia, "Times New Roman", serif;
+  --lud-ui:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  --lud-gold: #d7aa62;
-  --lud-gold-bright: #f0cf91;
-  --lud-bronze: #8e5928;
-
-  --lud-text: #ead9ba;
-  --lud-muted: #a28d70;
-  --lud-border: rgba(205, 148, 69, 0.32);
-  --lud-border-strong: rgba(229, 176, 89, 0.65);
-
-  --lud-radius: 6px;
-
-  --primary: var(--lud-text);
-  --secondary: var(--lud-bg);
-  --tertiary: var(--lud-gold);
-  --header_background: #080604;
-  --header_primary: var(--lud-text);
+  /* Current Discourse core exposes these component-level variables. */
+  --d-header-icon-color: var(--lud-muted);
+  --d-header-icon-color--hover: var(--lud-gold-bright);
+  --d-header-icon-color--active: var(--lud-gold-bright);
+  --d-header-icon-background--hover: var(--lud-panel-raised);
+  --d-header-icon-background--active: var(--lud-panel);
+  --d-input-bg-color: var(--lud-bg-deep);
+  --d-input-text-color: var(--lud-text);
+  --d-input-focused-color: var(--lud-gold);
+  --d-nav-color--hover: var(--lud-gold-bright);
+  --d-nav-color--active: var(--lud-gold);
+  --d-category-box-background-color: var(--lud-panel);
+  --d-category-boxes-gap: var(--lud-space-3);
+  --d-topic-list-header-background-color: transparent;
+  --d-topic-list-header-text-color: var(--lud-muted);
+  --d-topic-list-data-padding-y: 14px;
+  --d-topic-list-data-padding-x: 10px;
+  --d-topic-list-avatar-size: 24px;
+  --topic-list-item-background-color: var(--lud-panel);
+  --topic-list-item-background-color--visited: var(--lud-bg-raised);
 }
 
-html,
+html {
+  color-scheme: dark;
+}
+
 body {
   background: var(--lud-bg);
   color: var(--lud-text);
+  font-family: var(--lud-ui);
 }
 
-body {
-  background-image:
-    linear-gradient(
-      180deg,
-      rgba(4, 3, 2, 0.4) 0%,
-      rgba(4, 3, 2, 0.82) 58%,
-      #070604 100%
-    ),
-    url($forum_hero);
-
-  background-size: cover;
-  background-position: center top;
-  background-attachment: fixed;
+body.ludivion-public {
+  background-image: linear-gradient(
+    180deg,
+    rgba(4, 3, 2, 0.24) 0,
+    rgba(6, 5, 4, 0.83) 430px,
+    var(--lud-bg) 980px
+  );
   background-repeat: no-repeat;
 }
 
-/* ===== HEADER ===== */
+@if $show_ludivion_background == "true" or $show_ludivion_background == true {
+  body.ludivion-public:not(.ludivion-topic) {
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(4, 3, 2, 0.42) 0,
+        rgba(6, 5, 4, 0.85) 460px,
+        var(--lud-bg) 1000px
+      ),
+      url($forum_hero);
+    background-size: 100% auto;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
 
-.d-header {
-  background: rgba(7, 5, 3, 0.94);
-  border-bottom: 1px solid var(--lud-border);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+  body.ludivion-topic {
+    background-image:
+      linear-gradient(180deg, rgba(6, 5, 4, 0.91), var(--lud-bg) 530px),
+      url($forum_hero);
+    background-size: 100% auto;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
 }
 
-.d-header .wrap {
+/* Header is shared with Admin; only the branding and chrome are customized. */
+.d-header {
+  background: var(--lud-bg-deep);
+  border-bottom: 1px solid var(--lud-border-strong);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.d-header > .wrap {
   max-width: 1500px;
 }
 
-.d-header-icons .icon {
-  border: 1px solid var(--lud-border);
-  background: rgba(28, 18, 9, 0.75);
+.ludivion-home-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  height: 100%;
   color: var(--lud-gold-bright);
+  text-decoration: none;
 }
 
-/* ===== SIDEBAR ===== */
+.ludivion-home-logo__mark {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 43px;
+  height: 43px;
+  overflow: hidden;
+}
 
-.sidebar-wrapper {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(8, 6, 4, 0.96),
-      rgba(7, 5, 3, 0.92)
-    );
+.ludivion-home-logo__mark::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  background: url($ludivion_logo) center / contain no-repeat;
+  transform: scale(1.38);
+}
 
+.ludivion-home-logo__wordmark {
+  font-family: var(--lud-display);
+  font-size: 0.86rem;
+  letter-spacing: 0.22em;
+  white-space: nowrap;
+}
+
+.ludivion-home-logo:hover,
+.ludivion-home-logo:focus-visible {
+  color: var(--lud-ivory);
+  text-shadow: var(--lud-glow);
+}
+
+.d-header-icons .icon,
+.header-sidebar-toggle button {
+  border-radius: var(--lud-radius);
+}
+
+.d-header-icons .icon:focus-visible,
+.header-sidebar-toggle button:focus-visible {
+  outline: 2px solid var(--lud-gold-bright);
+  outline-offset: 2px;
+}
+
+.admin-sidebar {
+  background: var(--lud-panel-glass);
+  color: var(--lud-text);
   border-right: 1px solid var(--lud-border);
 }
 
-.sidebar-section-header-text,
-.sidebar-section-link-content-text {
-  color: var(--lud-text);
+.admin-sidebar a {
+  color: var(--lud-muted);
 }
 
-.sidebar-section-link:hover,
-.sidebar-section-link.active {
-  background: rgba(156, 96, 36, 0.16);
+.admin-sidebar a:hover,
+.admin-sidebar a:focus-visible {
   color: var(--lud-gold-bright);
 }
 
-/* ===== MAIN AREA ===== */
+/* Public navigation retains Discourse's sidebar structure and behavior. */
+body.ludivion-public .sidebar-wrapper {
+  background: var(--lud-panel-glass);
+  border-right: 1px solid var(--lud-border);
+}
 
-#main-outlet {
+body.ludivion-public .sidebar-section-header-text {
+  color: var(--lud-bronze);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+body.ludivion-public .sidebar-section-link {
+  border-radius: 5px;
+  color: var(--lud-muted);
+}
+
+body.ludivion-public .sidebar-section-link:hover,
+body.ludivion-public .sidebar-section-link.active {
+  background: var(--lud-panel-raised);
+  color: var(--lud-gold-bright);
+}
+
+body.ludivion-public .sidebar-section-link.active {
+  box-shadow: inset 2px 0 var(--lud-gold);
+}
+
+body.ludivion-public .sidebar-section-link-content-text,
+body.ludivion-public .sidebar-section-link .d-icon {
+  color: inherit;
+}
+
+/* Public shell: one controlled reading surface, never an Admin wrapper. */
+body.ludivion-public #main-outlet {
   max-width: 1180px;
-  margin: 38px auto;
-  padding: 26px 30px 50px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(13, 9, 5, 0.82),
-      rgba(8, 6, 4, 0.94)
-    );
-
+  min-width: 0;
+  margin: var(--lud-space-5) auto var(--lud-space-6);
+  padding: var(--lud-space-5);
+  background: var(--lud-panel-glass);
   border: 1px solid var(--lud-border);
-  border-radius: 10px;
-
-  box-shadow:
-    0 30px 90px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(239, 193, 113, 0.04);
-
-  backdrop-filter: blur(8px);
+  border-radius: var(--lud-radius);
+  box-shadow: var(--lud-shadow);
 }
 
-/* ===== TEXT ===== */
+body.ludivion-topic #main-outlet {
+  background: rgba(11, 9, 7, 0.98);
+}
 
-h1,
-h2,
-h3,
-.fancy-title,
-.category-name {
+body.ludivion-public #main-outlet,
+body.ludivion-public .modal-container,
+body.ludivion-public .menu-panel {
+  overflow-wrap: anywhere;
+}
+
+body.ludivion-public #main-outlet h1,
+body.ludivion-public #main-outlet h2,
+body.ludivion-public .fancy-title,
+body.ludivion-public .category-name {
   color: var(--lud-gold-bright);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--lud-display);
   font-weight: 500;
-  letter-spacing: 0.045em;
+  letter-spacing: 0.025em;
 }
 
-a {
+body.ludivion-public #main-outlet h3,
+body.ludivion-public #main-outlet h4 {
+  color: var(--lud-ivory);
+}
+
+body.ludivion-public a {
   color: var(--lud-gold);
 }
 
-a:hover {
+body.ludivion-public a:hover {
   color: var(--lud-gold-bright);
 }
 
-/* ===== BUTTONS ===== */
+body.ludivion-public
+  :is(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--lud-gold-bright);
+  outline-offset: 2px;
+}
 
-.btn,
-.d-button {
+body.ludivion-public .btn,
+body.ludivion-public .d-button {
+  border-radius: 5px;
+  border-color: var(--lud-border);
+  font-family: var(--lud-ui);
+  letter-spacing: 0.025em;
+}
+
+body.ludivion-public .btn-primary {
+  background: var(--lud-panel-raised);
   border: 1px solid var(--lud-border-strong);
-  border-radius: 4px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(133, 83, 34, 0.85),
-      rgba(55, 32, 14, 0.95)
-    );
-
   color: var(--lud-gold-bright);
-
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-
-  box-shadow:
-    inset 0 1px rgba(255, 231, 181, 0.08),
-    0 7px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 1px rgba(240, 211, 158, 0.09);
 }
 
-.btn:hover,
-.d-button:hover {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(162, 103, 45, 0.95),
-      rgba(68, 39, 16, 0.98)
-    );
-
+body.ludivion-public .btn-primary:hover,
+body.ludivion-public .btn-primary:focus-visible {
+  background: var(--lud-panel);
   border-color: var(--lud-gold-bright);
 }
 
-/* ===== FORMS ===== */
-
-input,
-textarea,
-select,
-.select-kit-header {
-  background: rgba(6, 5, 3, 0.85) !important;
-  color: var(--lud-text) !important;
-  border: 1px solid var(--lud-border) !important;
+body.ludivion-public :is(.btn-default, .btn-flat):hover {
+  background: var(--lud-panel-raised);
+  color: var(--lud-gold-bright);
 }
 
-input:focus,
-textarea:focus {
-  border-color: var(--lud-gold) !important;
-  box-shadow: 0 0 0 2px rgba(215, 170, 98, 0.12);
+body.ludivion-public :is(.btn, .d-button):disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-/* ===== TOPIC LIST ===== */
-
-.topic-list {
-  border-collapse: separate;
-  border-spacing: 0 7px;
-}
-
-.topic-list-header {
-  color: var(--lud-muted);
-}
-
-.topic-list-item {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(20, 14, 8, 0.94),
-      rgba(11, 8, 5, 0.9)
-    );
-
-  border-top: 1px solid var(--lud-border);
-  border-bottom: 1px solid rgba(205, 148, 69, 0.12);
-}
-
-.topic-list-item:hover {
-  background:
-    linear-gradient(
-      90deg,
-      rgba(31, 21, 11, 0.97),
-      rgba(15, 10, 6, 0.95)
-    );
-}
-
-/* ===== CATEGORY ===== */
-
-.category-list {
-  background: transparent;
-}
-
-.category-list-item {
-  background: var(--lud-panel);
+body.ludivion-public
+  :is(#main-outlet, .modal-container, #reply-control)
+  :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
+  background: var(--lud-bg-deep);
+  color: var(--lud-text);
   border: 1px solid var(--lud-border);
-  margin-bottom: 10px;
+  border-radius: 5px;
 }
 
-.category-description {
-  color: var(--lud-muted);
+body.ludivion-public
+  :is(#main-outlet, .modal-container, #reply-control)
+  :is(input, textarea, select)::placeholder {
+  color: var(--lud-dim);
+  opacity: 1;
 }
 
-/* ===== MODALS ===== */
-
-.modal-inner-container,
-.menu-panel,
-.select-kit-body {
-  background: var(--lud-panel-strong);
-  border: 1px solid var(--lud-border);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+body.ludivion-public
+  :is(#main-outlet, .modal-container, #reply-control)
+  :is(input, textarea, select):focus {
+  border-color: var(--lud-gold);
+  box-shadow: 0 0 0 2px rgba(214, 172, 106, 0.16);
 }
 
-/* ===== SEARCH ===== */
+body.ludivion-public :is(.error, .alert-error, .validation-error) {
+  color: var(--lud-danger);
+}
 
-.search-menu .search-input,
-.search-container input {
-  background: rgba(5, 4, 3, 0.94) !important;
+body.ludivion-public :is(.alert-success, .success) {
+  color: var(--lud-success);
+}
+
+/* Home introduction and district links. */
+.ludivion-forum-hero,
+.ludivion-halls {
+  box-sizing: border-box;
+  max-width: 1180px;
+  margin-inline: auto;
 }
 
 .ludivion-forum-hero {
-  max-width: 1180px;
-  margin: 52px auto 0;
-  padding: 68px 30px 56px;
-
+  margin-top: var(--lud-space-5);
+  padding: 48px var(--lud-space-5) 36px;
   text-align: center;
-
-  color: var(--lud-text);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(9, 6, 3, 0.16),
-      rgba(7, 5, 3, 0.74)
-    );
-
-  border-top: 1px solid rgba(221, 169, 82, 0.18);
-  border-bottom: 1px solid rgba(221, 169, 82, 0.22);
+  background: linear-gradient(
+    180deg,
+    rgba(10, 7, 4, 0.35),
+    rgba(9, 7, 5, 0.83)
+  );
+  border-top: 1px solid var(--lud-border);
+  border-bottom: 1px solid var(--lud-border);
 }
 
-.ludivion-forum-hero__eyebrow {
-  margin-bottom: 14px;
-
+.ludivion-forum-hero__eyebrow,
+.ludivion-halls__eyebrow,
+.ludivion-latest-heading > span {
   color: var(--lud-gold);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
 }
 
 .ludivion-forum-hero h1 {
-  margin: 0;
-
+  margin: 12px 0 0;
   color: var(--lud-gold-bright);
+  font-family: var(--lud-display);
+  font-size: clamp(2.25rem, 5vw, 4.4rem);
+  font-weight: 400;
+  letter-spacing: 0.065em;
+  line-height: 1.07;
+}
 
-  font-size: clamp(2.4rem, 5vw, 4.8rem);
+.ludivion-forum-hero p {
+  max-width: 620px;
+  margin: 16px auto 0;
+  color: var(--lud-text);
+  line-height: 1.55;
+}
+
+.ludivion-forum-hero__rule {
+  width: 160px;
+  height: 1px;
+  margin: 22px auto 14px;
+  background: linear-gradient(90deg, transparent, var(--lud-gold), transparent);
+}
+
+.ludivion-forum-hero__motto {
+  display: block;
+  color: var(--lud-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+}
+
+.ludivion-archive-search {
+  max-width: 520px;
+  margin: var(--lud-space-5) auto 0;
+  text-align: left;
+}
+
+.ludivion-archive-search label {
+  display: block;
+  margin-bottom: var(--lud-space-2);
+  color: var(--lud-gold-bright);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.ludivion-archive-search .search-menu-container {
+  position: relative;
+  min-width: 0;
+}
+
+.ludivion-archive-search .search-input-wrapper {
+  background: var(--lud-bg-deep);
+  border: 1px solid var(--lud-border-strong);
+  border-radius: 5px;
+}
+
+.ludivion-archive-search .search-input-wrapper:focus-within {
+  border-color: var(--lud-gold-bright);
+  box-shadow: 0 0 0 2px rgba(214, 172, 106, 0.16);
+}
+
+.ludivion-archive-search .search-input {
+  background: transparent;
+  color: var(--lud-text);
+}
+
+.ludivion-archive-search input {
+  width: 100%;
+  min-width: 0;
+  color: var(--lud-text);
+  background: transparent;
+  border: 0;
+}
+
+.ludivion-halls {
+  margin-top: var(--lud-space-4);
+  padding: var(--lud-space-5) var(--lud-space-4) var(--lud-space-4);
+}
+
+.ludivion-halls__header {
+  margin-bottom: var(--lud-space-5);
+  text-align: center;
+}
+
+.ludivion-halls__header h2 {
+  margin: var(--lud-space-2) 0;
+  color: var(--lud-gold-bright);
+  font-family: var(--lud-display);
+  font-size: clamp(1.55rem, 2.7vw, 2.35rem);
   font-weight: 400;
   letter-spacing: 0.07em;
 }
 
-.ludivion-forum-hero p {
-  margin: 18px auto 0;
-  max-width: 620px;
-
-  color: var(--lud-text);
-  font-size: 1rem;
-}
-
-.ludivion-forum-hero__line {
-  width: 180px;
-  height: 1px;
-
-  margin: 25px auto 18px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      var(--lud-gold),
-      transparent
-    );
-}
-
-.ludivion-forum-hero span {
-  color: var(--lud-muted);
-
-  font-size: 0.68rem;
-  letter-spacing: 0.28em;
-}
-
-/* =========================================================
-   LUDIVION COMMUNITY HALLS
-   ========================================================= */
-
-.ludivion-halls {
-  position: relative;
-
-  max-width: 1180px;
-  margin: 0 auto 34px;
-  padding: 34px 28px 10px;
-}
-
-.ludivion-halls__header {
-  max-width: 680px;
-  margin: 0 auto 32px;
-  text-align: center;
-}
-
-.ludivion-halls__eyebrow {
-  margin-bottom: 9px;
-
-  color: var(--lud-gold);
-  font-size: 0.67rem;
-  font-weight: 700;
-  letter-spacing: 0.26em;
-}
-
-.ludivion-halls__header h2 {
-  margin: 0;
-
-  color: var(--lud-gold-bright);
-
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.75rem, 3vw, 2.65rem);
-  font-weight: 400;
-  letter-spacing: 0.075em;
-}
-
 .ludivion-halls__header p {
-  margin: 10px 0 0;
+  margin: 0;
   color: var(--lud-muted);
 }
 
 .ludivion-halls__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: var(--lud-space-3);
 }
 
 .ludivion-hall-card {
   position: relative;
-
   display: flex;
   align-items: center;
-  gap: 18px;
-
-  min-height: 132px;
-  padding: 20px 22px;
-
+  gap: var(--lud-space-4);
+  min-width: 0;
+  min-height: 118px;
+  padding: 18px;
   overflow: hidden;
-
+  color: var(--lud-text);
   background:
-    linear-gradient(
-      105deg,
-      rgba(22, 15, 8, 0.96),
-      rgba(9, 7, 5, 0.9)
-    );
-
+    radial-gradient(circle at 0 50%, rgba(180, 125, 51, 0.13), transparent 42%),
+    var(--lud-panel-glass);
   border: 1px solid var(--lud-border);
-
-  box-shadow:
-    inset 0 1px 0 rgba(237, 190, 112, 0.04),
-    0 13px 36px rgba(0, 0, 0, 0.25);
-
+  border-radius: var(--lud-radius);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+  text-decoration: none;
   transition:
-    border-color 180ms ease,
-    transform 180ms ease,
-    background 180ms ease;
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
 }
 
-.ludivion-hall-card::before {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  pointer-events: none;
-
-  background:
-    radial-gradient(
-      circle at 0% 50%,
-      rgba(185, 117, 42, 0.12),
-      transparent 42%
-    );
-}
-
-.ludivion-hall-card:hover {
-  transform: translateY(-2px);
-
+.ludivion-hall-card:hover,
+.ludivion-hall-card:focus-visible {
+  color: var(--lud-text);
   border-color: var(--lud-border-strong);
+  box-shadow: var(--lud-shadow), var(--lud-glow);
+  transform: translateY(-2px);
+}
 
-  background:
-    linear-gradient(
-      105deg,
-      rgba(31, 20, 10, 0.98),
-      rgba(12, 8, 5, 0.94)
-    );
+.ludivion-hall-card--commons {
+  grid-column: 1 / -1;
 }
 
 .ludivion-hall-card__sigil {
-  position: relative;
-  z-index: 1;
-
   display: grid;
   place-items: center;
-
-  flex: 0 0 62px;
-
-  width: 62px;
-  height: 62px;
-
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
   color: var(--lud-gold-bright);
-
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.05rem;
-
   border: 1px solid var(--lud-border-strong);
-
-  transform: rotate(45deg);
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(167, 106, 43, 0.18),
-      rgba(9, 6, 4, 0.92)
-    );
-
-  box-shadow:
-    inset 0 0 22px rgba(211, 155, 73, 0.07);
+  border-radius: 50%;
+  font-family: var(--lud-display);
+  font-size: 1rem;
 }
 
 .ludivion-hall-card__body {
-  position: relative;
-  z-index: 1;
-
+  display: block;
   min-width: 0;
 }
 
 .ludivion-hall-card__code {
   display: block;
-  margin-bottom: 5px;
-
+  margin-bottom: var(--lud-space-1);
   color: var(--lud-bronze);
-
-  font-size: 0.58rem;
+  font-size: 0.61rem;
   font-weight: 700;
-  letter-spacing: 0.21em;
+  letter-spacing: 0.14em;
 }
 
-.ludivion-hall-card h3 {
-  margin: 0 0 7px;
-
+.ludivion-hall-card__title {
+  display: block;
   color: var(--lud-gold-bright);
-
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.05rem;
-  font-weight: 500;
-  letter-spacing: 0.055em;
+  font-family: var(--lud-display);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
 }
 
-.ludivion-hall-card p {
-  margin: 0;
-
-  max-width: 430px;
-
+.ludivion-hall-card__description {
+  display: block;
+  margin-top: var(--lud-space-1);
   color: var(--lud-muted);
-
-  font-size: 0.82rem;
-  line-height: 1.55;
+  font-size: 0.81rem;
+  line-height: 1.45;
 }
 
-/* Fifth card spans full width */
-.ludivion-hall-card--commons {
-  grid-column: 1 / -1;
+.ludivion-hall-card__fallback {
+  display: block;
+  margin-top: var(--lud-space-2);
+  color: var(--lud-warning);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
 }
 
-.ludivion-hall-card__sigil span {
-  transform: rotate(-45deg);
+.ludivion-hall-card__arrow {
+  margin-left: auto;
+  align-self: flex-start;
+  color: var(--lud-bronze);
 }
 
-/* =========================================================
-   ADMIN SHELL
-   ========================================================= */
+.ludivion-hall-card:hover .ludivion-hall-card__arrow,
+.ludivion-hall-card:focus-visible .ludivion-hall-card__arrow {
+  color: var(--lud-gold-bright);
+}
 
-.admin-area,
-.admin-main-nav,
-.admin-content,
-.admin-controls,
-.admin-detail,
-.admin-dashboard {
+.ludivion-latest-heading {
+  margin: var(--lud-space-4) 0 var(--lud-space-5);
+  padding-bottom: var(--lud-space-3);
+  border-bottom: 1px solid var(--lud-border);
+}
+
+.ludivion-latest-heading h2 {
+  margin: var(--lud-space-1) 0 0;
+  color: var(--lud-gold-bright);
+  font-family: var(--lud-display);
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+}
+
+body.ludivion-home #main-outlet {
+  margin-top: var(--lud-space-2);
+}
+
+/* Real Discourse discovery and topic data remain the content source. */
+body.ludivion-public .topic-list {
+  border-collapse: separate;
+  border-spacing: 0 var(--lud-space-2);
+  width: 100%;
+}
+
+body.ludivion-public .topic-list-header {
+  color: var(--lud-muted);
+  background: transparent;
+}
+
+body.ludivion-public .topic-list-item {
+  background: var(--topic-list-item-background-color);
+  box-shadow: inset 2px 0 var(--lud-border);
+}
+
+body.ludivion-public .topic-list-item:hover {
+  background: var(--lud-panel-raised);
+  box-shadow: inset 2px 0 var(--lud-gold);
+}
+
+body.ludivion-public .topic-list-item.unread,
+body.ludivion-public .topic-list-item.new {
+  box-shadow: inset 3px 0 var(--lud-gold-bright);
+}
+
+body.ludivion-public .topic-list-item :is(.title, .main-link) a {
+  color: var(--lud-ivory);
+  font-size: 1.04rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+body.ludivion-public .topic-list-item :is(.title, .main-link) a:hover {
+  color: var(--lud-gold-bright);
+  text-decoration: underline;
+  text-decoration-color: var(--lud-border-strong);
+}
+
+body.ludivion-public .topic-list :is(.num, .age, .posters, .topic-list-header) {
+  color: var(--lud-muted);
+  font-size: 0.8rem;
+}
+
+body.ludivion-public :is(.badge-category, .discourse-tag, .topic-status) {
+  color: var(--lud-bronze);
+}
+
+body.ludivion-public .badge-category,
+body.ludivion-public .discourse-tag {
+  border: 1px solid var(--lud-border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 0.74rem;
+}
+
+body.ludivion-hall-oracle {
+  --lud-category-accent: var(--lud-gold-bright);
+}
+
+body.ludivion-hall-journey {
+  --lud-category-accent: var(--lud-warning);
+}
+
+body.ludivion-hall-seekers {
+  --lud-category-accent: var(--lud-gold);
+}
+
+body.ludivion-hall-technical {
+  --lud-category-accent: var(--lud-bronze);
+}
+
+body.ludivion-hall-commons {
+  --lud-category-accent: var(--lud-ivory);
+}
+
+body.ludivion-category :is(.category-heading, .category-title-header) {
+  padding-bottom: var(--lud-space-4);
+  border-bottom: 1px solid var(--lud-category-accent, var(--lud-border));
+}
+
+body.ludivion-category .category-description {
+  max-width: 70ch;
+  color: var(--lud-muted);
+  line-height: 1.6;
+}
+
+body.ludivion-category
+  :is(.category-list-item, .category-box, .subcategory-list-item) {
+  background: var(--lud-panel);
+  border: 1px solid var(--lud-border);
+  border-radius: var(--lud-radius);
+  padding: var(--lud-space-3);
+}
+
+body.ludivion-category
+  :is(.category-list-item, .category-box, .subcategory-list-item):hover {
+  border-color: var(--lud-border-strong);
+}
+
+body.ludivion-category :is(.category-list, .category-boxes) {
+  background: transparent;
+}
+
+body.ludivion-public :is(.navigation-container, .category-breadcrumb) {
+  color: var(--lud-muted);
+}
+
+body.ludivion-public .nav-pills > li > a {
+  color: var(--lud-muted);
+  border-radius: 4px;
+}
+
+body.ludivion-public .nav-pills > li > a:hover,
+body.ludivion-public .nav-pills > li.active > a {
+  color: var(--lud-gold-bright);
+  background: var(--lud-panel-raised);
+}
+
+/* Topic reading: scoped to posts, with Discourse actions left intact. */
+body.ludivion-topic .topic-post {
+  margin-bottom: var(--lud-space-3);
+}
+
+body.ludivion-topic .topic-body {
+  background: var(--lud-panel);
+  border: 1px solid var(--lud-border);
+  border-radius: var(--lud-radius);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
+}
+
+body.ludivion-topic .topic-avatar {
+  border-top-color: var(--lud-border);
+}
+
+body.ludivion-topic
+  :is(.post-info, .post-date, .topic-meta-data, .topic-timeline) {
+  color: var(--lud-muted);
+}
+
+body.ludivion-topic .cooked {
+  max-width: 76ch;
   color: var(--lud-text);
+  font-family: var(--lud-ui);
+  font-size: 1rem;
+  line-height: 1.72;
 }
 
-.admin-area .nav-pills,
-.admin-area .admin-main-nav,
-.admin-area .admin-sidebar {
-  background:
-    linear-gradient(
-      180deg,
-      rgba(12, 9, 6, 0.98),
-      rgba(7, 5, 3, 0.98)
-    ) !important;
-
-  border-color: var(--lud-border) !important;
+body.ludivion-topic .cooked :is(h2, h3, h4) {
+  color: var(--lud-ivory);
+  font-family: var(--lud-display);
+  line-height: 1.3;
 }
 
-.admin-area .nav-pills > li > a,
-.admin-area .admin-sidebar a {
-  color: var(--lud-muted) !important;
+body.ludivion-topic .cooked a {
+  color: var(--lud-gold-bright);
+  text-decoration: underline;
+  text-decoration-color: var(--lud-bronze);
+  text-underline-offset: 2px;
 }
 
-.admin-area .nav-pills > li > a:hover,
-.admin-area .admin-sidebar a:hover {
-  color: var(--lud-gold-bright) !important;
-  background: rgba(155, 97, 36, 0.13) !important;
+body.ludivion-topic .cooked :is(blockquote, aside) {
+  margin-inline: 0;
+  padding: var(--lud-space-3) var(--lud-space-4);
+  color: var(--lud-text);
+  background: var(--lud-bg-raised);
+  border-left: 3px solid var(--lud-bronze);
 }
 
-.admin-area .nav-pills > li.active > a,
-.admin-area .admin-sidebar .active > a {
-  color: var(--lud-gold-bright) !important;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(126, 77, 29, 0.26),
-      rgba(48, 30, 15, 0.12)
-    ) !important;
-
-  border-left: 2px solid var(--lud-gold);
+body.ludivion-topic .cooked :is(pre, code) {
+  color: var(--lud-ivory);
+  background: var(--lud-bg-deep);
 }
 
-.admin-area table,
-.admin-area .admin-list,
-.admin-area .admin-detail {
-  background: rgba(9, 7, 5, 0.9);
+body.ludivion-topic .cooked pre {
+  padding: var(--lud-space-4);
+  border: 1px solid var(--lud-border);
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+body.ludivion-topic .cooked img,
+body.ludivion-topic .cooked iframe {
+  max-width: 100%;
+}
+
+body.ludivion-topic .post-controls {
+  border-top: 1px solid var(--lud-border);
+}
+
+body.ludivion-topic .post-controls .d-icon,
+body.ludivion-topic .post-controls button {
+  color: var(--lud-muted);
+}
+
+body.ludivion-topic .post-controls button:hover,
+body.ludivion-topic .post-controls button:focus-visible {
+  color: var(--lud-gold-bright);
+}
+
+/* Reusable official class: apply via a supported group/outlet when ORI exists. */
+body.ludivion-topic .ludivion-official-post .topic-body {
+  border-left: 3px solid var(--lud-gold);
+  box-shadow: var(--lud-glow);
+}
+
+body.ludivion-topic .ludivion-official-post .topic-body::before {
+  content: "ORI // OFFICIAL";
+  display: block;
+  padding: var(--lud-space-2) var(--lud-space-4) 0;
+  color: var(--lud-gold);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+/* Composer and previews. */
+body.ludivion-public #reply-control {
+  color: var(--lud-text);
+  background: var(--lud-panel-glass);
+  border-top: 1px solid var(--lud-border-strong);
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.4);
+}
+
+body.ludivion-public
+  #reply-control
+  :is(.d-editor, .d-editor-textarea-wrapper, .d-editor-preview) {
+  color: var(--lud-text);
+  background: var(--lud-bg-raised);
   border-color: var(--lud-border);
 }
 
-.admin-area input,
-.admin-area textarea,
-.admin-area select {
-  background: rgba(5, 4, 3, 0.95) !important;
-  color: var(--lud-text) !important;
+body.ludivion-public #reply-control .d-editor-button-bar {
+  background: var(--lud-panel);
+  border-bottom: 1px solid var(--lud-border);
+}
+
+body.ludivion-public #reply-control .d-editor-button-bar button:hover {
+  color: var(--lud-gold-bright);
+  background: var(--lud-panel-raised);
+}
+
+body.ludivion-public #reply-control .d-editor-preview {
+  padding: var(--lud-space-4);
+  line-height: 1.6;
+}
+
+/* Menus and dialogs use their own stable containers. */
+body.ludivion-public
+  :is(.menu-panel, .modal-inner-container, .select-kit-body, .fk-d-menu) {
+  color: var(--lud-text);
+  background: var(--lud-panel-glass);
+  border: 1px solid var(--lud-border);
+  border-radius: var(--lud-radius);
+  box-shadow: var(--lud-shadow);
+}
+
+body.ludivion-public
+  :is(.menu-panel, .modal-inner-container, .select-kit-body)
+  a {
+  color: var(--lud-text);
+}
+
+body.ludivion-public
+  :is(.menu-panel, .modal-inner-container, .select-kit-body)
+  a:hover {
+  color: var(--lud-gold-bright);
+}
+
+body.ludivion-public
+  :is(.select-kit-header, .search-menu .search-input, .search-container input) {
+  color: var(--lud-text);
+  background: var(--lud-bg-deep);
+  border: 1px solid var(--lud-border);
+}
+
+body.ludivion-public :is(.select-kit-row, .menu-panel li):hover {
+  background: var(--lud-panel-raised);
+}
+
+/* Identity, insignia and auth surfaces retain core behavior. */
+body.ludivion-public :is(.user-main, .user-card, .badge-card, .user-profile) {
+  color: var(--lud-text);
+  background: var(--lud-panel);
+  border-color: var(--lud-border);
+  border-radius: var(--lud-radius);
+}
+
+body.ludivion-public :is(.user-main, .user-card) .username {
+  color: var(--lud-gold-bright);
+  font-family: var(--lud-display);
+}
+
+body.ludivion-public :is(.user-card, .badge-card, .user-badge) .badge {
+  color: var(--lud-gold-bright);
+  background: var(--lud-panel-raised);
+  border: 1px solid var(--lud-border);
+  border-radius: 4px;
+}
+
+body.ludivion-public :is(.login-modal, .signup-modal, .forgot-password-modal) {
+  color: var(--lud-text);
+}
+
+body.ludivion-public
+  :is(.empty-state, .search-empty, .not-found-container, .loading-container) {
+  color: var(--lud-muted);
+  background: var(--lud-bg-raised);
+  border: 1px solid var(--lud-border);
+  border-radius: var(--lud-radius);
+  padding: var(--lud-space-5);
+}
+
+body.ludivion-public .alert {
+  background: var(--lud-panel);
+  border-color: var(--lud-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ludivion-hall-card {
+    transition: none;
+  }
+
+  .ludivion-hall-card:hover,
+  .ludivion-hall-card:focus-visible {
+    transform: none;
+  }
 }

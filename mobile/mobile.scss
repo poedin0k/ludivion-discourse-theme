@@ -1,42 +1,68 @@
 @media (max-width: 767px) {
-  body {
-    background-attachment: scroll;
-    background-position: 50% top;
+  body.ludivion-public {
+    background-image: linear-gradient(
+      180deg,
+      rgba(6, 5, 4, 0.7),
+      var(--lud-bg) 530px
+    );
   }
 
-  #main-outlet {
-    margin: 12px 8px 30px;
-    padding: 18px 12px 30px;
-
-    border-radius: 6px;
+  @if $show_ludivion_background == "true" or $show_ludivion_background == true {
+    body.ludivion-public:not(.ludivion-topic) {
+      background-image:
+        linear-gradient(180deg, rgba(6, 5, 4, 0.68), var(--lud-bg) 560px),
+        url($forum_hero);
+      background-size:
+        auto,
+        auto 530px;
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+    }
   }
 
-  .btn,
-  .d-button {
-    min-height: 42px;
+  .ludivion-home-logo__mark {
+    width: 36px;
+    height: 36px;
   }
 
-  .topic-list-item {
-    border-radius: 4px;
+  .ludivion-home-logo__wordmark {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
   }
-}
 
-@media (max-width: 767px) {
+  .d-header-icons {
+    margin-left: var(--lud-space-1);
+  }
+
+  body.ludivion-public #main-outlet {
+    margin: var(--lud-space-2) var(--lud-space-2) var(--lud-space-5);
+    padding: var(--lud-space-4) var(--lud-space-3);
+    border-radius: 5px;
+  }
+
   .ludivion-forum-hero {
-    margin-top: 14px;
-    padding: 42px 18px 38px;
+    margin-top: var(--lud-space-2);
+    padding: var(--lud-space-6) var(--lud-space-4) var(--lud-space-5);
   }
 
   .ludivion-forum-hero h1 {
-    font-size: 2.15rem;
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .ludivion-forum-hero__motto {
+    letter-spacing: 0.1em;
+    line-height: 1.5;
   }
 
   .ludivion-halls {
-    padding: 22px 8px 4px;
+    margin-top: 0;
+    padding: var(--lud-space-5) var(--lud-space-2) var(--lud-space-3);
   }
 
   .ludivion-halls__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--lud-space-2);
   }
 
   .ludivion-hall-card--commons {
@@ -44,17 +70,50 @@
   }
 
   .ludivion-hall-card {
-    min-height: 112px;
-    padding: 17px 15px;
+    min-height: 104px;
+    padding: var(--lud-space-3);
+    gap: var(--lud-space-3);
   }
 
   .ludivion-hall-card__sigil {
-    flex-basis: 48px;
-    width: 48px;
-    height: 48px;
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
   }
 
-  .ludivion-hall-card h3 {
-    font-size: 0.92rem;
+  .ludivion-hall-card__title {
+    font-size: 0.93rem;
+  }
+
+  .ludivion-hall-card__arrow {
+    display: none;
+  }
+
+  .ludivion-latest-heading h2 {
+    font-size: 1.45rem;
+  }
+
+  body.ludivion-public .topic-list-item :is(.title, .main-link) a {
+    font-size: 0.98rem;
+  }
+
+  body.ludivion-topic .topic-body {
+    border-radius: 5px;
+  }
+
+  body.ludivion-topic .cooked {
+    max-width: 100%;
+    font-size: 0.96rem;
+    line-height: 1.65;
+  }
+
+  body.ludivion-public #reply-control .d-editor-preview {
+    padding: var(--lud-space-2);
+  }
+}
+
+@media (max-width: 390px) {
+  .ludivion-home-logo__wordmark {
+    display: none;
   }
 }
