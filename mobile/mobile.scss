@@ -20,3 +20,41 @@
     border-radius: 4px;
   }
 }
+
+@media (max-width: 767px) {
+  .ludivion-forum-hero {
+    margin-top: 14px;
+    padding: 42px 18px 38px;
+  }
+
+  .ludivion-forum-hero h1 {
+    font-size: 2.15rem;
+  }
+
+  .ludivion-halls {
+    padding: 22px 8px 4px;
+  }
+
+  .ludivion-halls__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ludivion-hall-card--commons {
+    grid-column: auto;
+  }
+
+  .ludivion-hall-card {
+    min-height: 112px;
+    padding: 17px 15px;
+  }
+
+  .ludivion-hall-card__sigil {
+    flex-basis: 48px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .ludivion-hall-card h3 {
+    font-size: 0.92rem;
+  }
+}
