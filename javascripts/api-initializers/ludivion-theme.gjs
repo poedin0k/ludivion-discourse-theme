@@ -13,6 +13,7 @@ const HALLS = [
     title: "ORI’S PROPHECY",
     description:
       "Official knowledge, announcements, rules and visions of Ludivion.",
+    subtitle: "OFFICIAL KNOWLEDGE / ANNOUNCEMENTS / RULES",
     slugs: ["oris-prophecy", "ori-s-prophecy", "ori-prophecy"],
     names: ["ori's prophecy", "ori’s prophecy"],
     identity: "oracle",
@@ -23,6 +24,7 @@ const HALLS = [
     title: "JOURNEY THROUGH LUDIVION",
     description:
       "Progression, quests, events, achievements, currencies and relics.",
+    subtitle: "QUESTS / PROGRESSION / RELICS",
     slugs: ["journey-through-ludivion"],
     names: ["journey through ludivion"],
     identity: "journey",
@@ -33,6 +35,7 @@ const HALLS = [
     title: "SEEKERS’ HALL",
     description:
       "Guides, answers, strategies and knowledge gathered by the community.",
+    subtitle: "GUIDES / ANSWERS / COMMUNITY KNOWLEDGE",
     slugs: ["seekers-hall", "seekers"],
     names: ["seekers' hall", "seekers’ hall"],
     identity: "seekers",
@@ -43,6 +46,7 @@ const HALLS = [
     title: "TECHNICAL DISCUSSIONS",
     description:
       "Developer notes, technical help, bug reports and product feedback.",
+    subtitle: "SYSTEMS / SUPPORT / ENGINEERING",
     slugs: ["technical-discussions"],
     names: ["technical discussions"],
     identity: "technical",
@@ -53,6 +57,7 @@ const HALLS = [
     title: "THE COMMONS",
     description:
       "The social heart of Ludivion: discussion, stories and milestones.",
+    subtitle: "STORIES / DISCUSSION / MILESTONES",
     slugs: ["the-commons", "commons"],
     names: ["the commons"],
     identity: "commons",
@@ -229,6 +234,36 @@ class LudivionLatestHeading extends Component {
   </template>
 }
 
+class LudivionHallHeading extends Component {
+  get hall() {
+    const category = this.args.outletArgs?.category;
+
+    if (!category || category.parent_category_id) {
+      return null;
+    }
+
+    return HALLS.find(
+      (hall) =>
+        hall.slugs.some((slug) => normalized(slug) === normalized(category.slug)) ||
+        hall.names.some((name) => normalized(name) === normalized(category.name))
+    );
+  }
+
+  <template>
+    {{#if this.hall}}
+      <div class="ludivion-hall-heading">
+        <span class="ludivion-hall-heading__sigil" aria-hidden="true">{{this.hall.number}}</span>
+        <div class="ludivion-hall-heading__content">
+          <span class="ludivion-hall-heading__code">HALL {{this.hall.code}}</span>
+          <h1>{{this.hall.title}}</h1>
+          <p class="ludivion-hall-heading__subtitle">{{this.hall.subtitle}}</p>
+          <p class="ludivion-hall-heading__description">{{this.hall.description}}</p>
+        </div>
+      </div>
+    {{/if}}
+  </template>
+}
+
 export default apiInitializer((api) => {
   // Discourse's own display hook removes the generic welcome/search banner
   // only from the branded latest view, without changing a site setting.
@@ -237,5 +272,9 @@ export default apiInitializer((api) => {
   );
   api.renderInOutlet("home-logo", LudivionHomeLogo);
   api.renderInOutlet("below-site-header", LudivionCommunityShell);
-  api.renderInOutlet("before-list-area", LudivionLatestHeading);
+  api.renderInOutlet("discovery-list-controls-above", LudivionLatestHeading);
+  api.renderInOutlet("category-heading", LudivionHallHeading);
+  api.registerValueTransformer("topic-list-item-class", ({ value, context }) =>
+    context.topic?.creator?.staff ? [...(value || []), "ludivion-staff-topic"] : value
+  );
 });

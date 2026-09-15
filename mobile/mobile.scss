@@ -36,14 +36,15 @@
   }
 
   body.ludivion-public #main-outlet {
-    margin: var(--lud-space-2) var(--lud-space-2) var(--lud-space-5);
+    width: calc(100% - 2 * var(--lud-space-2));
+    margin: var(--lud-space-2) auto var(--lud-space-5);
     padding: var(--lud-space-4) var(--lud-space-3);
     border-radius: 5px;
   }
 
   .ludivion-forum-hero {
     margin-top: var(--lud-space-2);
-    padding: var(--lud-space-6) var(--lud-space-4) var(--lud-space-5);
+    padding: var(--lud-space-5) var(--lud-space-4);
   }
 
   .ludivion-forum-hero h1 {
@@ -93,6 +94,41 @@
     font-size: 1.45rem;
   }
 
+  .ludivion-hall-heading {
+    gap: var(--lud-space-3);
+  }
+
+  .ludivion-hall-heading__sigil {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .ludivion-hall-heading__subtitle {
+    line-height: 1.45;
+  }
+
+  body.ludivion-public .navigation-container {
+    min-width: 0;
+  }
+
+  body.ludivion-public .nav-pills {
+    gap: var(--lud-space-1);
+  }
+
+  body.ludivion-public .nav-pills > li > a {
+    padding: 7px 8px;
+  }
+
+  body.ludivion-public .topic-list-item .topic-list-data {
+    padding-block: var(--lud-space-3);
+  }
+
+  body.ludivion-public .topic-list-item :is(.title, .main-link) {
+    overflow-wrap: anywhere;
+  }
+
   body.ludivion-public .topic-list-item :is(.title, .main-link) a {
     font-size: 0.98rem;
   }
@@ -109,6 +145,18 @@
 
   body.ludivion-public #reply-control .d-editor-preview {
     padding: var(--lud-space-2);
+  }
+
+  body.ludivion-public #reply-control :is(.composer-fields, .d-editor) {
+    min-width: 0;
+  }
+
+  body.ludivion-public #reply-control :is(input, textarea) {
+    max-width: 100%;
+  }
+
+  body.ludivion-public :is(.d-modal, .menu-panel, .select-kit-body) {
+    max-width: calc(100vw - 2 * var(--lud-space-2));
   }
 }
 

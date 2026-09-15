@@ -1,4 +1,4 @@
-/* Ludivion V1: one dark palette, one token system, public selectors only. */
+/* Ludivion: one palette for the public forum; Admin retains core controls. */
 :root {
   --lud-bg: #090806;
   --lud-bg-raised: #100d09;
@@ -30,8 +30,47 @@
   --lud-display: Georgia, "Times New Roman", serif;
   --lud-ui:
     system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
 
-  /* Current Discourse core exposes these component-level variables. */
+body.ludivion-public,
+body:is(
+  .login-page,
+  .signup-page,
+  .password-reset-page,
+  .activate-account-page
+) {
+  --d-max-width: 1360px;
+  --d-main-content-gap: var(--lud-space-4);
+  --d-sidebar-background: var(--lud-panel-glass);
+  --d-sidebar-footer-fade: rgb(15 11 7);
+  --d-sidebar-border-color: var(--lud-border);
+  --d-sidebar-section-border-color: var(--lud-border);
+  --d-sidebar-link-color: var(--lud-muted);
+  --d-sidebar-link-icon-color: var(--lud-dim);
+  --d-sidebar-header-color: var(--lud-bronze);
+  --d-sidebar-highlight-background: var(--lud-panel-raised);
+  --d-sidebar-highlight-color: var(--lud-gold-bright);
+  --d-sidebar-active-background: var(--lud-panel-raised);
+  --d-sidebar-active-color: var(--lud-gold-bright);
+  --d-nav-bg-color--hover: var(--lud-panel-raised);
+  --d-nav-bg-color--active: var(--lud-panel-raised);
+  --d-nav-border-color--active: var(--lud-gold);
+  --d-input-border: 1px solid var(--lud-border);
+  --d-input-border--disabled: 1px solid var(--lud-border);
+  --d-input-bg-color--disabled: var(--lud-bg-raised);
+  --d-input-text-color--disabled: var(--lud-dim);
+  --d-tag-background-color: var(--lud-bg-raised);
+  --d-tag-border-radius: 4px;
+  --d-post-aside-background: var(--lud-bg-raised);
+  --d-post-aside-border-left: 3px solid var(--lud-bronze);
+  --d-topic-list-title-font-size: 1rem;
+  --d-topic-list-data-padding-y: 12px;
+  --d-topic-list-data-padding-x: 10px;
+  --d-topic-list-header-data-padding-y: 9px;
+  --d-topic-list-header-data-padding-x: 10px;
+  --d-topic-list-margin-bottom: 0;
+
+  /* Discourse component variables are scoped to the public routes. */
   --d-header-icon-color: var(--lud-muted);
   --d-header-icon-color--hover: var(--lud-gold-bright);
   --d-header-icon-color--active: var(--lud-gold-bright);
@@ -46,24 +85,13 @@
   --d-category-boxes-gap: var(--lud-space-3);
   --d-topic-list-header-background-color: transparent;
   --d-topic-list-header-text-color: var(--lud-muted);
-  --d-topic-list-data-padding-y: 14px;
-  --d-topic-list-data-padding-x: 10px;
   --d-topic-list-avatar-size: 24px;
   --topic-list-item-background-color: var(--lud-panel);
   --topic-list-item-background-color--visited: var(--lud-bg-raised);
-}
-
-html {
   color-scheme: dark;
-}
-
-body {
   background: var(--lud-bg);
   color: var(--lud-text);
   font-family: var(--lud-ui);
-}
-
-body.ludivion-public {
   background-image: linear-gradient(
     180deg,
     rgba(4, 3, 2, 0.24) 0,
@@ -102,6 +130,11 @@ body.ludivion-public {
 
 /* Header is shared with Admin; only the branding and chrome are customized. */
 .d-header {
+  --d-header-icon-color: var(--lud-muted);
+  --d-header-icon-color--hover: var(--lud-gold-bright);
+  --d-header-icon-color--active: var(--lud-gold-bright);
+  --d-header-icon-background--hover: var(--lud-panel-raised);
+  --d-header-icon-background--active: var(--lud-panel);
   background: var(--lud-bg-deep);
   border-bottom: 1px solid var(--lud-border-strong);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -153,7 +186,19 @@ body.ludivion-public {
 
 .d-header-icons .icon,
 .header-sidebar-toggle button {
+  background: var(--lud-panel);
+  border: 1px solid var(--lud-border);
   border-radius: var(--lud-radius);
+}
+
+.d-header-icons .icon:hover,
+.header-sidebar-toggle button:hover {
+  background: var(--lud-panel-raised);
+  border-color: var(--lud-border-strong);
+}
+
+.d-header img.avatar {
+  border: 1px solid var(--lud-border-strong);
 }
 
 .d-header-icons .icon:focus-visible,
@@ -181,6 +226,53 @@ body.ludivion-public {
 body.ludivion-public .sidebar-wrapper {
   background: var(--lud-panel-glass);
   border-right: 1px solid var(--lud-border);
+}
+
+body.ludivion-public .sidebar-footer-wrapper {
+  color: var(--lud-dim);
+  background: var(--lud-panel-glass);
+  border-top: 1px solid var(--lud-border);
+}
+
+body.ludivion-public .sidebar-footer-wrapper .btn-flat {
+  color: var(--lud-dim);
+}
+
+body.ludivion-public .sidebar-footer-wrapper .btn-flat:hover {
+  color: var(--lud-gold-bright);
+}
+
+body.ludivion-public #footer {
+  color: var(--lud-dim);
+  background: var(--lud-bg-deep);
+  border-top: 1px solid var(--lud-border);
+}
+
+body.ludivion-public #footer .container .contents a[href] {
+  color: var(--lud-dim);
+  font-size: 0.7rem;
+  text-decoration: none;
+}
+
+body.ludivion-public #footer .container .contents a[href]:hover {
+  color: var(--lud-muted);
+}
+
+/* Core renders its PoweredByDiscourse component below the outlet wrapper. */
+body.ludivion-public .powered-by-discourse {
+  color: var(--lud-dim);
+  background: var(--lud-bg-deep);
+  border-top: 1px solid var(--lud-border);
+  font-size: 0.7rem;
+}
+
+body.ludivion-public .powered-by-discourse a {
+  color: var(--lud-dim);
+  text-decoration: none;
+}
+
+body.ludivion-public .powered-by-discourse a:hover {
+  color: var(--lud-muted);
 }
 
 body.ludivion-public .sidebar-section-header-text {
@@ -213,9 +305,10 @@ body.ludivion-public .sidebar-section-link .d-icon {
 
 /* Public shell: one controlled reading surface, never an Admin wrapper. */
 body.ludivion-public #main-outlet {
-  max-width: 1180px;
+  box-sizing: border-box;
+  width: min(100%, 1260px);
   min-width: 0;
-  margin: var(--lud-space-5) auto var(--lud-space-6);
+  margin: var(--lud-space-4) auto var(--lud-space-6);
   padding: var(--lud-space-5);
   background: var(--lud-panel-glass);
   border: 1px solid var(--lud-border);
@@ -228,7 +321,7 @@ body.ludivion-topic #main-outlet {
 }
 
 body.ludivion-public #main-outlet,
-body.ludivion-public .modal-container,
+body.ludivion-public .d-modal,
 body.ludivion-public .menu-panel {
   overflow-wrap: anywhere;
 }
@@ -294,7 +387,7 @@ body.ludivion-public :is(.btn, .d-button):disabled {
 }
 
 body.ludivion-public
-  :is(#main-outlet, .modal-container, #reply-control)
+  :is(#main-outlet, .d-modal, #reply-control)
   :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
   background: var(--lud-bg-deep);
   color: var(--lud-text);
@@ -303,14 +396,14 @@ body.ludivion-public
 }
 
 body.ludivion-public
-  :is(#main-outlet, .modal-container, #reply-control)
+  :is(#main-outlet, .d-modal, #reply-control)
   :is(input, textarea, select)::placeholder {
   color: var(--lud-dim);
   opacity: 1;
 }
 
 body.ludivion-public
-  :is(#main-outlet, .modal-container, #reply-control)
+  :is(#main-outlet, .d-modal, #reply-control)
   :is(input, textarea, select):focus {
   border-color: var(--lud-gold);
   box-shadow: 0 0 0 2px rgba(214, 172, 106, 0.16);
@@ -328,13 +421,13 @@ body.ludivion-public :is(.alert-success, .success) {
 .ludivion-forum-hero,
 .ludivion-halls {
   box-sizing: border-box;
-  max-width: 1180px;
+  max-width: 1260px;
   margin-inline: auto;
 }
 
 .ludivion-forum-hero {
-  margin-top: var(--lud-space-5);
-  padding: 48px var(--lud-space-5) 36px;
+  margin-top: var(--lud-space-4);
+  padding: 36px var(--lud-space-5) 26px;
   text-align: center;
   background: linear-gradient(
     180deg,
@@ -430,12 +523,12 @@ body.ludivion-public :is(.alert-success, .success) {
 }
 
 .ludivion-halls {
-  margin-top: var(--lud-space-4);
-  padding: var(--lud-space-5) var(--lud-space-4) var(--lud-space-4);
+  margin-top: var(--lud-space-3);
+  padding: var(--lud-space-4) var(--lud-space-4) var(--lud-space-3);
 }
 
 .ludivion-halls__header {
-  margin-bottom: var(--lud-space-5);
+  margin-bottom: var(--lud-space-4);
   text-align: center;
 }
 
@@ -558,7 +651,7 @@ body.ludivion-public :is(.alert-success, .success) {
 }
 
 .ludivion-latest-heading {
-  margin: var(--lud-space-4) 0 var(--lud-space-5);
+  margin: var(--lud-space-2) 0 var(--lud-space-4);
   padding-bottom: var(--lud-space-3);
   border-bottom: 1px solid var(--lud-border);
 }
@@ -573,13 +666,19 @@ body.ludivion-public :is(.alert-success, .success) {
 }
 
 body.ludivion-home #main-outlet {
-  margin-top: var(--lud-space-2);
+  margin-top: 0;
+  border-top-color: transparent;
+}
+
+/* The checklist is site-owner-only in core; keep its Admin tasks reachable. */
+body.ludivion-home .admin-onboarding-banner {
+  display: none;
 }
 
 /* Real Discourse discovery and topic data remain the content source. */
 body.ludivion-public .topic-list {
   border-collapse: separate;
-  border-spacing: 0 var(--lud-space-2);
+  border-spacing: 0;
   width: 100%;
 }
 
@@ -593,6 +692,10 @@ body.ludivion-public .topic-list-item {
   box-shadow: inset 2px 0 var(--lud-border);
 }
 
+body.ludivion-public .topic-list-item .topic-list-data {
+  border-bottom: 1px solid var(--lud-border);
+}
+
 body.ludivion-public .topic-list-item:hover {
   background: var(--lud-panel-raised);
   box-shadow: inset 2px 0 var(--lud-gold);
@@ -601,6 +704,25 @@ body.ludivion-public .topic-list-item:hover {
 body.ludivion-public .topic-list-item.unread,
 body.ludivion-public .topic-list-item.new {
   box-shadow: inset 3px 0 var(--lud-gold-bright);
+}
+
+body.ludivion-public .topic-list-item.ludivion-staff-topic {
+  box-shadow: inset 3px 0 var(--lud-bronze);
+}
+
+body.ludivion-public .topic-list-item :is(.topic-status, .pinned) {
+  color: var(--lud-bronze);
+}
+
+body.ludivion-public .topic-list-item .topic-list-data :is(.num, .age) {
+  color: var(--lud-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+body.ludivion-public .topic-list-item .posters img.avatar {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--lud-border);
 }
 
 body.ludivion-public .topic-list-item :is(.title, .main-link) a {
@@ -633,6 +755,29 @@ body.ludivion-public .discourse-tag {
   font-size: 0.74rem;
 }
 
+body.ludivion-public .badge-category .badge-category__name {
+  color: var(--lud-muted);
+}
+
+body.ludivion-public .topic-list .badge-category.--style-square::before {
+  background: var(--lud-bronze);
+}
+
+body.ludivion-public .topic-list .badge-category.--style-icon .d-icon {
+  color: var(--lud-bronze);
+}
+
+body.ludivion-public .badge-group {
+  color: var(--lud-gold-bright);
+  background: var(--lud-panel-raised);
+  border: 1px solid var(--lud-border);
+}
+
+body.ludivion-public .badge-notification.unread-notifications {
+  color: var(--lud-bg-deep);
+  background: var(--lud-gold);
+}
+
 body.ludivion-hall-oracle {
   --lud-category-accent: var(--lud-gold-bright);
 }
@@ -653,9 +798,70 @@ body.ludivion-hall-commons {
   --lud-category-accent: var(--lud-ivory);
 }
 
-body.ludivion-category :is(.category-heading, .category-title-header) {
-  padding-bottom: var(--lud-space-4);
+body.ludivion-category .category-heading {
+  margin-bottom: var(--lud-space-4);
+  padding: var(--lud-space-4) 0 var(--lud-space-5);
   border-bottom: 1px solid var(--lud-category-accent, var(--lud-border));
+}
+
+body.ludivion-category
+  .category-heading:has(.ludivion-hall-heading)
+  > :is(.category-heading__logo, .category-heading__content) {
+  display: none;
+}
+
+.ludivion-hall-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--lud-space-5);
+  max-width: 100%;
+}
+
+.ludivion-hall-heading__sigil {
+  display: grid;
+  place-items: center;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  color: var(--lud-category-accent, var(--lud-gold));
+  border: 1px solid currentcolor;
+  border-radius: 50%;
+  font-family: var(--lud-display);
+  font-size: 1.3rem;
+}
+
+.ludivion-hall-heading__content {
+  min-width: 0;
+}
+
+.ludivion-hall-heading__code,
+.ludivion-hall-heading__subtitle {
+  color: var(--lud-category-accent, var(--lud-bronze));
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.ludivion-hall-heading h1 {
+  margin: var(--lud-space-1) 0 var(--lud-space-2);
+  color: var(--lud-ivory);
+  font-family: var(--lud-display);
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 400;
+  line-height: 1.16;
+}
+
+.ludivion-hall-heading__subtitle,
+.ludivion-hall-heading__description {
+  margin: 0;
+}
+
+.ludivion-hall-heading__description {
+  max-width: 65ch;
+  margin-top: var(--lud-space-2);
+  color: var(--lud-muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
 }
 
 body.ludivion-category .category-description {
@@ -685,8 +891,24 @@ body.ludivion-public :is(.navigation-container, .category-breadcrumb) {
   color: var(--lud-muted);
 }
 
+body.ludivion-public .navigation-container {
+  margin-bottom: var(--lud-space-4);
+  padding-bottom: var(--lud-space-3);
+  border-bottom: 1px solid var(--lud-border);
+}
+
+body.ludivion-public .nav-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lud-space-1) var(--lud-space-2);
+}
+
 body.ludivion-public .nav-pills > li > a {
   color: var(--lud-muted);
+  padding: 7px 10px;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
   border-radius: 4px;
 }
 
@@ -696,20 +918,47 @@ body.ludivion-public .nav-pills > li.active > a {
   background: var(--lud-panel-raised);
 }
 
+body.ludivion-public .nav-pills > li.active > a {
+  box-shadow: inset 0 -2px var(--lud-gold);
+}
+
+body.ludivion-public .navigation-container #create-topic {
+  color: var(--lud-gold-bright);
+  background: var(--lud-panel-raised);
+  border: 1px solid var(--lud-border-strong);
+  border-radius: 4px;
+}
+
+body.ludivion-public .category-breadcrumb .select-kit-header {
+  color: var(--lud-muted);
+  background: var(--lud-bg-deep);
+  border: 1px solid var(--lud-border);
+  border-radius: 4px;
+}
+
 /* Topic reading: scoped to posts, with Discourse actions left intact. */
 body.ludivion-topic .topic-post {
-  margin-bottom: var(--lud-space-3);
+  margin-bottom: var(--lud-space-2);
 }
 
 body.ludivion-topic .topic-body {
-  background: var(--lud-panel);
-  border: 1px solid var(--lud-border);
-  border-radius: var(--lud-radius);
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
+  background: rgba(19, 15, 10, 0.88);
+  border: 0;
+  border-bottom: 1px solid var(--lud-border);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 body.ludivion-topic .topic-avatar {
   border-top-color: var(--lud-border);
+}
+
+body.ludivion-topic .topic-avatar img.avatar {
+  border: 1px solid var(--lud-border);
+}
+
+body.ludivion-topic .topic-meta-data .names :is(.first, .second) {
+  color: var(--lud-ivory);
 }
 
 body.ludivion-topic
@@ -751,6 +1000,14 @@ body.ludivion-topic .cooked :is(pre, code) {
   background: var(--lud-bg-deep);
 }
 
+body.ludivion-topic .cooked :is(ul, ol) {
+  padding-inline-start: 1.5em;
+}
+
+body.ludivion-topic .cooked li + li {
+  margin-top: 0.35em;
+}
+
 body.ludivion-topic .cooked pre {
   padding: var(--lud-space-4);
   border: 1px solid var(--lud-border);
@@ -761,6 +1018,12 @@ body.ludivion-topic .cooked pre {
 body.ludivion-topic .cooked img,
 body.ludivion-topic .cooked iframe {
   max-width: 100%;
+}
+
+body.ludivion-topic .cooked :is(.onebox, .onebox-body) {
+  color: var(--lud-text);
+  background: var(--lud-bg-raised);
+  border-color: var(--lud-border);
 }
 
 body.ludivion-topic .post-controls {
@@ -777,20 +1040,30 @@ body.ludivion-topic .post-controls button:focus-visible {
   color: var(--lud-gold-bright);
 }
 
-/* Reusable official class: apply via a supported group/outlet when ORI exists. */
-body.ludivion-topic .ludivion-official-post .topic-body {
-  border-left: 3px solid var(--lud-gold);
-  box-shadow: var(--lud-glow);
+/* Core marks staff and primary groups on the post metadata username. */
+body.ludivion-topic .topic-post:has(.names .first.staff) .topic-body {
+  box-shadow: inset 2px 0 var(--lud-bronze);
 }
 
-body.ludivion-topic .ludivion-official-post .topic-body::before {
-  content: "ORI // OFFICIAL";
+body.ludivion-topic .topic-post:has(.names .first.staff) .topic-body::before {
+  content: "STAFF";
   display: block;
-  padding: var(--lud-space-2) var(--lud-space-4) 0;
-  color: var(--lud-gold);
-  font-size: 0.63rem;
+  padding: var(--lud-space-2) var(--lud-space-3) 0;
+  color: var(--lud-bronze);
+  font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
+}
+
+body.ludivion-topic .topic-post:has(.names .first.group--ori) .topic-body {
+  box-shadow: inset 3px 0 var(--lud-gold);
+}
+
+body.ludivion-topic
+  .topic-post:has(.names .first.group--ori)
+  .topic-body::before {
+  content: "ORI // OFFICIAL";
+  color: var(--lud-gold);
 }
 
 /* Composer and previews. */
@@ -799,6 +1072,22 @@ body.ludivion-public #reply-control {
   background: var(--lud-panel-glass);
   border-top: 1px solid var(--lud-border-strong);
   box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.4);
+}
+
+body.ludivion-public #reply-control :is(.composer-fields, .composer-controls) {
+  color: var(--lud-text);
+  background: var(--lud-panel);
+  border-color: var(--lud-border);
+}
+
+body.ludivion-public #reply-control :is(.composer-title, .reply-to) {
+  color: var(--lud-ivory);
+}
+
+body.ludivion-public #reply-control .select-kit-header {
+  color: var(--lud-text);
+  background: var(--lud-bg-deep);
+  border: 1px solid var(--lud-border);
 }
 
 body.ludivion-public
@@ -824,9 +1113,17 @@ body.ludivion-public #reply-control .d-editor-preview {
   line-height: 1.6;
 }
 
+body.ludivion-public #reply-control .d-editor-preview .cooked {
+  color: var(--lud-text);
+}
+
+body.ludivion-public #reply-control :is(.btn, .d-button):focus-visible {
+  outline: 2px solid var(--lud-gold-bright);
+  outline-offset: 2px;
+}
+
 /* Menus and dialogs use their own stable containers. */
-body.ludivion-public
-  :is(.menu-panel, .modal-inner-container, .select-kit-body, .fk-d-menu) {
+body.ludivion-public :is(.menu-panel, .d-modal, .select-kit-body, .fk-d-menu) {
   color: var(--lud-text);
   background: var(--lud-panel-glass);
   border: 1px solid var(--lud-border);
@@ -835,14 +1132,32 @@ body.ludivion-public
 }
 
 body.ludivion-public
-  :is(.menu-panel, .modal-inner-container, .select-kit-body)
-  a {
+  :is(.menu-panel, .d-modal, .select-kit-body, .fk-d-menu)
+  :is(
+    .d-modal__header,
+    .d-modal__body,
+    .d-modal__footer,
+    .panel-body,
+    .select-kit-collection
+  ) {
+  color: var(--lud-text);
+  background: transparent;
+  border-color: var(--lud-border);
+}
+
+body.ludivion-public :is(.menu-panel, .fk-d-menu, .select-kit-body) {
+  max-width: min(94vw, 420px);
+}
+
+body.ludivion-public :is(.menu-panel, .fk-d-menu, .select-kit-body) .d-icon {
+  color: var(--lud-muted);
+}
+
+body.ludivion-public :is(.menu-panel, .d-modal, .select-kit-body) a {
   color: var(--lud-text);
 }
 
-body.ludivion-public
-  :is(.menu-panel, .modal-inner-container, .select-kit-body)
-  a:hover {
+body.ludivion-public :is(.menu-panel, .d-modal, .select-kit-body) a:hover {
   color: var(--lud-gold-bright);
 }
 
@@ -857,12 +1172,71 @@ body.ludivion-public :is(.select-kit-row, .menu-panel li):hover {
   background: var(--lud-panel-raised);
 }
 
+body.ludivion-public
+  :is(.select-kit-row.is-selected, .select-kit-row.is-highlighted) {
+  color: var(--lud-gold-bright);
+  background: var(--lud-panel-raised);
+}
+
+body.ludivion-public .search-menu .search-result-topic,
+body.ludivion-public .search-container .fps-result {
+  color: var(--lud-text);
+  background: var(--lud-panel);
+  border-bottom: 1px solid var(--lud-border);
+}
+
+body.ludivion-public .search-menu .search-result-topic:hover,
+body.ludivion-public .search-container .fps-result:hover,
+body.ludivion-public .search-container .fps-result.selected {
+  background: var(--lud-panel-raised);
+}
+
+body.ludivion-public .search-container .fps-result .fps-topic {
+  color: var(--lud-ivory);
+}
+
+body.ludivion-public
+  .search-container
+  :is(.search-filters, .search-advanced-filters, .search-advanced-options) {
+  color: var(--lud-text);
+  background: var(--lud-panel);
+  border-color: var(--lud-border);
+}
+
+body.ludivion-public :is(.emoji-picker, .emoji-picker-emoji-area) {
+  color: var(--lud-text);
+  background: var(--lud-panel-glass);
+  border-color: var(--lud-border);
+}
+
 /* Identity, insignia and auth surfaces retain core behavior. */
 body.ludivion-public :is(.user-main, .user-card, .badge-card, .user-profile) {
   color: var(--lud-text);
   background: var(--lud-panel);
   border-color: var(--lud-border);
   border-radius: var(--lud-radius);
+}
+
+body.ludivion-public
+  :is(.user-main, .user-card)
+  :is(.user-profile, .user-card-background) {
+  color: var(--lud-text);
+  background: var(--lud-panel);
+  border-color: var(--lud-border);
+}
+
+body.ludivion-public :is(.user-main, .user-card) :is(.bio, .user-stat) {
+  color: var(--lud-muted);
+}
+
+body.ludivion-public .user-main :is(.nav-pills, .user-nav) {
+  border-bottom: 1px solid var(--lud-border);
+}
+
+body.ludivion-public :is(.user-stream-item, .user-summary) {
+  color: var(--lud-text);
+  background: var(--lud-bg-raised);
+  border-color: var(--lud-border);
 }
 
 body.ludivion-public :is(.user-main, .user-card) .username {
@@ -877,17 +1251,62 @@ body.ludivion-public :is(.user-card, .badge-card, .user-badge) .badge {
   border-radius: 4px;
 }
 
-body.ludivion-public :is(.login-modal, .signup-modal, .forgot-password-modal) {
-  color: var(--lud-text);
+/* Login, signup and activation use route-owned full pages in current core. */
+body:is(
+  .login-page,
+  .signup-page,
+  .password-reset-page,
+  .activate-account-page
+) {
+  :is(.login-body, .signup-body, .activate-account, .password-reset) {
+    color: var(--lud-text);
+    background: var(--lud-panel-glass);
+    border: 1px solid var(--lud-border);
+    border-radius: var(--lud-radius);
+    box-shadow: var(--lud-shadow);
+  }
+
+  :is(.login-fullpage, .signup-fullpage, .activate-account, .password-reset) {
+    :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
+      color: var(--lud-text);
+      background: var(--lud-bg-deep);
+      border: 1px solid var(--lud-border);
+      border-radius: 5px;
+      max-width: 100%;
+    }
+
+    :is(input, textarea, select):focus {
+      border-color: var(--lud-gold);
+      box-shadow: 0 0 0 2px rgba(214, 172, 106, 0.16);
+    }
+
+    :is(input, textarea, select)::placeholder {
+      color: var(--lud-dim);
+      opacity: 1;
+    }
+
+    :is(label, .control-label, .more-info) {
+      color: var(--lud-muted);
+    }
+  }
+
+  .btn-primary {
+    color: var(--lud-gold-bright);
+    background: var(--lud-panel-raised);
+    border: 1px solid var(--lud-border-strong);
+  }
 }
 
-body.ludivion-public
-  :is(.empty-state, .search-empty, .not-found-container, .loading-container) {
+body.ludivion-public :is(.empty-state, .search-empty, .not-found-container) {
   color: var(--lud-muted);
   background: var(--lud-bg-raised);
   border: 1px solid var(--lud-border);
   border-radius: var(--lud-radius);
-  padding: var(--lud-space-5);
+  padding: var(--lud-space-4);
+}
+
+body.ludivion-public .loading-container {
+  color: var(--lud-muted);
 }
 
 body.ludivion-public .alert {
