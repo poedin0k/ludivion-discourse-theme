@@ -1,0 +1,4 @@
+show_ludivion_background:
+  default: true
+  type: bool
+  description: "Enable the Ludivion atmospheric background."

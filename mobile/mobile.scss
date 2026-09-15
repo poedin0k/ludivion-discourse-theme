@@ -1,0 +1,15 @@
+@media (max-width: 767px) {
+  #main-outlet {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .btn,
+  .d-button {
+    min-height: 42px;
+  }
+
+  .topic-list-item {
+    border-radius: var(--lud-radius-sm);
+  }
+}
