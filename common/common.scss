@@ -16,6 +16,14 @@
   --lud-danger: #d68072;
   --lud-success: #92bc8e;
   --lud-warning: #e3bd7b;
+  --lud-cta: #67481f;
+  --lud-cta-hover: #80592a;
+  --lud-selected: #352614;
+  --lud-danger-bg: #49201d;
+  --lud-danger-bg-hover: #622a24;
+  --lud-success-bg: #1c3427;
+  --lud-success-bg-hover: #294936;
+  --lud-overlay: rgba(9, 6, 3, 0.72);
   --lud-border: rgba(198, 153, 86, 0.27);
   --lud-border-strong: rgba(231, 187, 112, 0.56);
   --lud-shadow: 0 18px 54px rgba(0, 0, 0, 0.42);
@@ -377,58 +385,266 @@ body.ludivion-public
   outline-offset: 2px;
 }
 
-body.ludivion-public .btn,
-body.ludivion-public .d-button {
+/* BUTTONS: native variants own their states, including danger and success. */
+body.ludivion-public,
+body:is(
+  .login-page,
+  .signup-page,
+  .password-reset-page,
+  .activate-account-page
+) {
+  --d-button-border-radius: 5px;
+  --d-button-border: 1px solid var(--lud-border);
+  --d-button-default-text-color: var(--lud-text);
+  --d-button-default-text-color--hover: var(--lud-ivory);
+  --d-button-default-bg-color: var(--lud-bg-raised);
+  --d-button-default-bg-color--hover: var(--lud-panel-raised);
+  --d-button-default-icon-color: var(--lud-muted);
+  --d-button-default-icon-color--hover: var(--lud-gold-bright);
+  --d-button-default-border: 1px solid var(--lud-border);
+  --d-button-default-border--hover: 1px solid var(--lud-border-strong);
+  --d-button-primary-text-color: var(--lud-ivory);
+  --d-button-primary-text-color--hover: var(--lud-ivory);
+  --d-button-primary-bg-color: var(--lud-cta);
+  --d-button-primary-bg-color--hover: var(--lud-cta-hover);
+  --d-button-primary-icon-color: var(--lud-ivory);
+  --d-button-primary-icon-color--hover: var(--lud-ivory);
+  --d-button-primary-border: 1px solid var(--lud-border-strong);
+  --d-button-primary-border--hover: 1px solid var(--lud-gold);
+  --d-button-flat-text-color: var(--lud-gold);
+  --d-button-flat-text-color--hover: var(--lud-gold-bright);
+  --d-button-flat-text-color--disabled: var(--lud-dim);
+  --d-button-flat-icon-color: var(--lud-muted);
+  --d-button-flat-icon-color--hover: var(--lud-gold-bright);
+  --d-button-flat-bg-color--hover: var(--lud-panel-raised);
+  --d-button-flat-bg-color--focus: var(--lud-panel-raised);
+  --d-button-flat-close-icon-color: var(--lud-muted);
+  --d-button-flat-close-icon-color--hover: var(--lud-gold-bright);
+  --d-button-transparent-text-color: var(--lud-muted);
+  --d-button-transparent-text-color--hover: var(--lud-gold-bright);
+  --d-button-transparent-icon-color: var(--lud-muted);
+  --d-button-transparent-icon-color--hover: var(--lud-gold-bright);
+  --d-button-danger-text-color: var(--lud-ivory);
+  --d-button-danger-text-color--hover: var(--lud-ivory);
+  --d-button-danger-icon-color: var(--lud-danger);
+  --d-button-danger-icon-color--hover: var(--lud-ivory);
+  --d-button-danger-bg-color: var(--lud-danger-bg);
+  --d-button-danger-bg-color--hover: var(--lud-danger-bg-hover);
+  --d-button-danger-border: 1px solid var(--lud-danger);
+  --d-button-danger-border--hover: 1px solid var(--lud-danger);
+  --d-button-success-text-color: var(--lud-ivory);
+  --d-button-success-text-color--hover: var(--lud-ivory);
+  --d-button-success-icon-color: var(--lud-success);
+  --d-button-success-icon-color--hover: var(--lud-ivory);
+  --d-button-success-bg-color: var(--lud-success-bg);
+  --d-button-success-bg-color--hover: var(--lud-success-bg-hover);
+  --d-button-success-border: 1px solid var(--lud-success);
+  --d-button-success-border--hover: 1px solid var(--lud-success);
+}
+
+body.ludivion-public .btn {
   border-radius: 5px;
-  border-color: var(--lud-border);
   font-family: var(--lud-ui);
   letter-spacing: 0.025em;
 }
 
-body.ludivion-public .btn-primary {
-  background: var(--lud-panel-raised);
-  border: 1px solid var(--lud-border-strong);
-  color: var(--lud-gold-bright);
-  box-shadow: inset 0 1px rgba(240, 211, 158, 0.09);
+/* Transparent semantic buttons use readable accents, rather than fill colors. */
+body.ludivion-public,
+body:is(
+  .login-page,
+  .signup-page,
+  .password-reset-page,
+  .activate-account-page
+) {
+  .btn-transparent:is(.--primary, .btn-primary) {
+    --lud-button-accent: var(--lud-gold);
+  }
+
+  .btn-transparent:is(.--danger, .btn-danger) {
+    --lud-button-accent: var(--lud-danger);
+  }
+
+  .btn-transparent:is(.--success, .btn-success) {
+    --lud-button-accent: var(--lud-success);
+  }
+
+  .btn-transparent:is(
+    .--primary,
+    .btn-primary,
+    .--danger,
+    .btn-danger,
+    .--success,
+    .btn-success
+  ) {
+    color: var(--lud-button-accent);
+
+    &:is(:hover, :focus-visible) {
+      color: var(--lud-button-accent);
+    }
+
+    .d-icon,
+    &:is(:hover, :focus-visible) .d-icon {
+      color: currentColor;
+    }
+  }
 }
 
-body.ludivion-public .btn-primary:hover,
-body.ludivion-public .btn-primary:focus-visible {
-  background: var(--lud-panel);
-  border-color: var(--lud-gold-bright);
+/* FORMS: low specificity leaves component and plugin controls authoritative.
+   Explicit field types exclude hidden, file, range, color and button inputs. */
+:where(
+  body.ludivion-public,
+  body:is(
+    .login-page,
+    .signup-page,
+    .password-reset-page,
+    .activate-account-page
+  )
+) {
+  :where(
+    input:not([type]),
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    input[type="url"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="date"],
+    input[type="datetime-local"],
+    input[type="time"],
+    textarea,
+    select
+  ):is(input, textarea, select) {
+    color: var(--d-input-text-color);
+    background-color: var(--d-input-bg-color);
+    border: var(--d-input-border);
+    border-radius: 5px;
+
+    &::placeholder {
+      color: var(--lud-dim);
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--lud-gold-bright);
+      outline-offset: 2px;
+    }
+
+    &:disabled,
+    &[readonly] {
+      color: var(--d-input-text-color--disabled);
+      background-color: var(--d-input-bg-color--disabled);
+      border: var(--d-input-border--disabled);
+    }
+
+    &[aria-invalid="true"],
+    &:focus:required:invalid {
+      border-color: var(--lud-danger);
+      outline-color: var(--lud-danger);
+    }
+  }
+
+  input:is([type="checkbox"], [type="radio"]) {
+    accent-color: var(--lud-gold);
+  }
+
+  label {
+    color: var(--lud-text);
+  }
+
+  .form-horizontal :is(textarea, select) {
+    color: var(--d-input-text-color);
+  }
 }
 
-body.ludivion-public :is(.btn-default, .btn-flat):hover {
-  background: var(--lud-panel-raised);
-  color: var(--lud-gold-bright);
-}
+body.ludivion-public {
+  .filter-input-container {
+    --token-color-background-input: var(--lud-bg-deep);
+    color: var(--lud-text);
 
-body.ludivion-public :is(.btn, .d-button):disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
+    &:focus-within {
+      border-color: var(--lud-gold);
+      box-shadow: var(--lud-focus-glow);
+    }
+  }
 
-body.ludivion-public
-  :is(#main-outlet, .d-modal, #reply-control)
-  :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
-  background: var(--lud-bg-deep);
-  color: var(--lud-text);
-  border: 1px solid var(--lud-border);
-  border-radius: 5px;
-}
+  .form-kit__control-checkbox-checkmark {
+    background-color: var(--lud-bg-deep);
+    border-color: var(--lud-bronze);
 
-body.ludivion-public
-  :is(#main-outlet, .d-modal, #reply-control)
-  :is(input, textarea, select)::placeholder {
-  color: var(--lud-dim);
-  opacity: 1;
-}
+    &::before {
+      background-color: var(--lud-gold);
+    }
+  }
 
-body.ludivion-public
-  :is(#main-outlet, .d-modal, #reply-control)
-  :is(input, textarea, select):focus {
-  border-color: var(--lud-gold);
-  box-shadow: 0 0 0 2px rgba(214, 172, 106, 0.16);
+  .form-kit__control-checkbox-label:hover
+    .form-kit__control-checkbox-checkmark {
+    border-color: var(--lud-gold);
+  }
+
+  .form-kit__control-checkbox:checked + .form-kit__control-checkbox-checkmark {
+    border-color: var(--lud-gold);
+
+    .d-icon {
+      color: var(--lud-bg-deep);
+    }
+  }
+
+  .form-kit__control-checkbox:focus-visible
+    + .form-kit__control-checkbox-checkmark {
+    outline: 2px solid var(--lud-gold-bright);
+    outline-offset: 2px;
+  }
+
+  .form-kit__control-checkbox:disabled + .form-kit__control-checkbox-checkmark {
+    opacity: 0.5;
+  }
+
+  .form-kit__control-checkbox-label,
+  .form-kit__control-radio-label,
+  .form-kit__fieldset-title {
+    color: var(--lud-text);
+  }
+
+  .form-kit__control-checkbox-description,
+  .form-kit__control-radio-description {
+    color: var(--lud-muted);
+  }
+
+  .d-toggle-switch .d-toggle-switch__checkbox-slider {
+    background-color: var(--lud-panel-raised);
+
+    &::before {
+      background-color: var(--lud-ivory);
+    }
+  }
+
+  .d-toggle-switch__checkbox[aria-checked="true"]
+    + .d-toggle-switch__checkbox-slider {
+    background-color: var(--lud-gold);
+  }
+
+  .d-toggle-switch:hover
+    .d-toggle-switch__checkbox[aria-checked="true"]:not([disabled])
+    + .d-toggle-switch__checkbox-slider {
+    background-color: var(--lud-gold-bright);
+  }
+
+  .d-toggle-switch:focus .d-toggle-switch__checkbox-slider,
+  .d-toggle-switch__checkbox:focus + .d-toggle-switch__checkbox-slider {
+    outline-color: var(--lud-gold-bright);
+  }
+
+  .d-toggle-switch__checkbox:focus-visible + .d-toggle-switch__checkbox-slider {
+    outline-color: var(--lud-gold-bright);
+  }
+
+  .d-toggle-switch__checkbox[aria-checked="true"]
+    + .d-toggle-switch__checkbox-slider
+    .d-icon {
+    /* Core fixes this icon to secondary; keep the override local to the SVG. */
+    --secondary: var(--lud-bg-deep);
+  }
 }
 
 body.ludivion-public :is(.error, .alert-error, .validation-error) {
@@ -1280,12 +1496,6 @@ body.ludivion-public #reply-control :is(.composer-title, .reply-to) {
   color: var(--lud-ivory);
 }
 
-body.ludivion-public #reply-control .select-kit-header {
-  color: var(--lud-text);
-  background: var(--lud-bg-deep);
-  border: 1px solid var(--lud-border);
-}
-
 body.ludivion-public
   #reply-control
   :is(.d-editor, .d-editor-textarea-wrapper, .d-editor-preview) {
@@ -1318,135 +1528,882 @@ body.ludivion-public #reply-control :is(.btn, .d-button):focus-visible {
   outline-offset: 2px;
 }
 
-/* Menus and dialogs use their own stable containers. */
-body.ludivion-public :is(.menu-panel, .d-modal, .select-kit-body, .fk-d-menu) {
-  color: var(--lud-text);
-  background: var(--lud-panel-glass);
-  border: 1px solid var(--lud-border);
-  border-radius: var(--lud-radius);
-  box-shadow: var(--lud-shadow);
+/* MODALS: paint the surface, never the full-screen positioning wrapper. */
+body.ludivion-public {
+  .d-modal__container,
+  .dialog-content {
+    --content-border-color: var(--lud-border);
+    color: var(--lud-text);
+    background-color: var(--lud-panel);
+    border: 1px solid var(--lud-border-strong);
+    border-radius: var(--lud-radius);
+    box-shadow: var(--lud-shadow);
+  }
+
+  .d-modal__header,
+  .d-modal__footer,
+  .dialog-header,
+  .dialog-footer {
+    background-color: var(--lud-bg-raised);
+    border-color: var(--lud-border);
+  }
+
+  .d-modal__title-text,
+  /* Confirmation dialogs use a heading rather than a modal title component. */
+  .dialog-header h3 {
+    color: var(--lud-gold-bright);
+  }
+
+  .d-modal__subtitle-text,
+  .d-modal .input-hint-text {
+    color: var(--lud-muted);
+  }
+
+  .d-modal .modal-close .d-icon,
+  .dialog-close .d-icon {
+    color: var(--lud-muted);
+  }
+
+  :is(.modal-close, .dialog-close):is(:hover, :focus-visible) .d-icon {
+    color: var(--lud-gold-bright);
+  }
+
+  .d-modal__backdrop {
+    background-color: rgb(9 6 3);
+    animation-name: ludivion-backdrop-enter;
+
+    &.is-exiting {
+      animation-name: ludivion-backdrop-exit;
+    }
+  }
+
+  .dialog-overlay {
+    background-color: var(--lud-overlay);
+  }
+
+  .dialog-content {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    max-width: calc(100vw - 2rem);
+    max-height: calc(var(--composer-vh, 1dvh) * 100 - 2rem);
+  }
+
+  .dialog-body {
+    min-height: 0;
+  }
+
+  .dialog-header,
+  .dialog-footer {
+    flex-shrink: 0;
+  }
+
+  /* Invite's native radio group keeps its moving slider and hit targets. */
+  .d-segmented-control {
+    background-color: var(--lud-bg-deep);
+
+    &__slider {
+      background-color: var(--lud-selected);
+      box-shadow: inset 0 0 0 1px var(--lud-border-strong);
+    }
+
+    &__label {
+      color: var(--lud-muted);
+
+      &:hover {
+        color: var(--lud-ivory);
+        background-color: var(--lud-panel-raised);
+      }
+
+      &:has(:checked),
+      &:has(:checked):hover {
+        color: var(--lud-gold-bright);
+        background-color: transparent;
+      }
+
+      &:has(:focus-visible) {
+        outline-color: var(--lud-gold-bright);
+      }
+    }
+  }
+
+  .create-invite-with-roles-modal {
+    .create-invite-with-roles-modal__summary-row {
+      border-color: var(--lud-border);
+
+      dt {
+        color: var(--lud-muted);
+      }
+    }
+
+    .create-invite-with-roles-modal__staff-role-description {
+      color: var(--lud-muted);
+    }
+  }
+
+  #keyboard-shortcuts-help {
+    .shortcut-category,
+    tbody tr {
+      border-color: var(--lud-border);
+    }
+
+    .shortcut-category h2 {
+      color: var(--lud-gold);
+      background-color: var(--lud-panel-raised);
+    }
+
+    tbody tr:nth-child(odd) {
+      background-color: var(--lud-bg-raised);
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: var(--lud-panel);
+    }
+  }
+
+  kbd.d-shortcut {
+    color: var(--lud-ivory);
+    background-color: var(--lud-bg-deep);
+    border: 1px solid var(--lud-border-strong);
+  }
 }
 
+/* Keep core's duration, exit lifecycle and reduced-motion handling. */
+@keyframes ludivion-backdrop-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.72;
+  }
+}
+
+@keyframes ludivion-backdrop-exit {
+  from {
+    opacity: 0.72;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* MENUS: each component owns its state tokens and its actual inner surface. */
+body.ludivion-public {
+  .menu-panel,
+  .fk-d-menu__inner-content,
+  .select-kit,
+  .select-kit-body,
+  .autocomplete {
+    --d-hover: var(--lud-panel-raised);
+    --d-selected: var(--lud-selected);
+    --d-selected-hover: var(--lud-cta);
+    --d-selected-text-color: var(--lud-gold-bright);
+    --content-border-color: var(--lud-border);
+    color: var(--lud-text);
+  }
+
+  .menu-panel,
+  .fk-d-menu__inner-content {
+    background-color: var(--lud-panel);
+    border-color: var(--lud-border-strong);
+    box-shadow: var(--lud-shadow);
+  }
+
+  .fk-d-menu > .arrow {
+    color: var(--lud-panel);
+  }
+
+  .dropdown-menu__divider {
+    border-color: var(--lud-border);
+  }
+
+  .dropdown-menu__subheader {
+    color: var(--lud-bronze);
+  }
+
+  .user-menu {
+    --d-unread-notification-background: var(--lud-selected);
+
+    .menu-tabs-container,
+    .panel-body-bottom {
+      background-color: var(--lud-bg-raised);
+      border-color: var(--lud-border);
+    }
+
+    .tabs-list .btn .d-icon {
+      color: var(--lud-muted);
+    }
+
+    .tabs-list .btn.active .d-icon {
+      color: var(--lud-gold-bright);
+      background-color: var(--lud-selected);
+    }
+
+    .tabs-list .btn .badge-notification {
+      color: var(--lud-bg-deep);
+      background-color: var(--lud-gold);
+    }
+
+    .quick-access-panel {
+      .read,
+      .bookmark {
+        background-color: var(--lud-panel);
+      }
+
+      li:is(.unread, .pending) {
+        box-shadow: inset 2px 0 var(--lud-gold);
+      }
+
+      li:is(:hover, :focus-within) {
+        background-color: var(--lud-panel-raised);
+      }
+
+      li:focus-within {
+        outline: 2px solid var(--lud-gold-bright);
+        outline-offset: -2px;
+      }
+
+      .item-label {
+        color: var(--lud-ivory);
+      }
+
+      li a .item-description,
+      .relative-date {
+        color: var(--lud-muted);
+      }
+
+      .show-all a {
+        color: var(--lud-text);
+        background-color: var(--lud-bg-raised);
+
+        &:hover {
+          color: var(--lud-gold-bright);
+          background-color: var(--lud-panel-raised);
+        }
+      }
+    }
+
+    &.show-avatars li:is(.notification, .bookmark, .reviewable, .message) a {
+      color: var(--lud-text);
+
+      .item-description {
+        color: var(--lud-muted);
+      }
+
+      .icon-avatar__icon-wrapper {
+        background-color: var(--lud-bg-raised);
+
+        .d-icon {
+          color: var(--lud-muted);
+        }
+      }
+    }
+
+    &.show-avatars li:is(.unread, .pending) a .icon-avatar__icon-wrapper {
+      background-color: var(--lud-gold);
+
+      .d-icon {
+        color: var(--lud-bg-deep);
+      }
+    }
+
+    .quick-access-panel .is-warning .d-icon-envelope {
+      color: var(--lud-danger);
+    }
+
+    &.show-avatars li.is-warning a .icon-avatar__icon-wrapper {
+      background-color: var(--lud-danger-bg);
+
+      .d-icon-envelope {
+        color: var(--lud-danger);
+      }
+    }
+  }
+
+  .sidebar-more-section-content {
+    .sidebar-row {
+      color: var(--lud-muted);
+
+      .d-icon {
+        color: var(--lud-bronze);
+      }
+
+      &:is(:hover, :focus-visible) {
+        color: var(--lud-gold-bright);
+        background-color: var(--lud-panel-raised);
+      }
+    }
+  }
+
+  .hamburger-panel .revamped .sidebar-footer-wrapper .sidebar-footer-container {
+    background-color: var(--lud-panel);
+
+    &::before {
+      background: linear-gradient(to bottom, transparent, var(--lud-panel));
+    }
+  }
+}
+
+/* SELECT-KIT: category/user/tag choosers share the native state system. */
+body.ludivion-public {
+  .select-kit {
+    --input-border-color: var(--lud-border);
+
+    .select-kit-header:not(.btn),
+    &.combo-box .select-kit-header,
+    &.multi-select .multi-select-header {
+      color: var(--lud-text);
+      background-color: var(--lud-bg-deep);
+      border-color: var(--lud-border);
+    }
+
+    .select-kit-header.is-focused,
+    &.is-highlighted .select-kit-header,
+    &.is-expanded .select-kit-header:focus-visible {
+      outline: 2px solid var(--lud-gold-bright);
+      outline-offset: -2px;
+      border-color: var(--lud-gold);
+    }
+
+    &.is-disabled .select-kit-header:not(.btn) {
+      color: var(--lud-dim);
+      background-color: var(--lud-bg-raised);
+    }
+
+    &.is-expanded .select-kit-body {
+      color: var(--lud-text);
+      background-color: var(--lud-panel);
+      border-color: var(--lud-border-strong);
+      box-shadow: var(--lud-shadow);
+    }
+  }
+
+  .select-kit-body {
+    .select-kit-collection {
+      background-color: var(--lud-panel);
+    }
+
+    .select-kit-filter,
+    .no-content {
+      color: var(--lud-muted);
+      background-color: var(--lud-bg-raised);
+      border-color: var(--lud-border);
+    }
+
+    .select-kit-filter .filter-input {
+      color: var(--lud-text);
+      background-color: var(--lud-bg-deep);
+
+      &:focus-visible {
+        outline: 2px solid var(--lud-gold-bright);
+        outline-offset: -2px;
+      }
+    }
+
+    .select-kit-row :is(.name, .username, .discourse-tag) {
+      color: inherit;
+    }
+  }
+
+  .select-kit.multi-select .selected-content {
+    background-color: var(--lud-bg-deep);
+    border-color: var(--lud-border);
+  }
+}
+
+/* SEARCH: sticky strips, filter panels, results and date popovers. */
+body.ludivion-public {
+  .search-container,
+  .user-main,
+  .container.badges,
+  .show-badge,
+  .reviewable,
+  .chat-drawer,
+  .full-page-chat {
+    --d-content-background: var(--lud-panel);
+    --content-border-color: var(--lud-border);
+    --d-nav-color: var(--lud-muted);
+    --d-nav-bg-color: transparent;
+    color: var(--lud-text);
+  }
+
+  .search-container {
+    .search-info,
+    .search-advanced-filters,
+    .search-advanced-options {
+      color: var(--lud-text);
+      background-color: var(--lud-panel);
+      border-color: var(--lud-border);
+    }
+
+    .fps-result {
+      color: var(--lud-text);
+      background-color: var(--lud-bg-raised);
+      border-bottom: 1px solid var(--lud-border);
+
+      &:hover,
+      &.selected {
+        background-color: var(--lud-panel-raised);
+      }
+
+      .fps-topic {
+        color: var(--lud-ivory);
+      }
+
+      .blurb {
+        color: var(--lud-muted);
+      }
+    }
+  }
+
+  :is(.search-menu, .ludivion-archive-search) .search-result-topic {
+    color: var(--lud-text);
+    background-color: var(--lud-panel);
+    border-bottom: 1px solid var(--lud-border);
+
+    &:hover {
+      background-color: var(--lud-panel-raised);
+    }
+  }
+
+  .autocomplete {
+    background-color: var(--lud-panel);
+    border-color: var(--lud-border);
+
+    li a,
+    .name {
+      color: var(--lud-text);
+    }
+  }
+
+  .pika-single {
+    color: var(--lud-text);
+    background-color: var(--lud-panel);
+    border-color: var(--lud-border-strong);
+
+    .pika-label,
+    .pika-button {
+      color: var(--lud-text);
+      background-color: var(--lud-panel);
+    }
+
+    .pika-label {
+      color: var(--lud-gold-bright);
+    }
+
+    .pika-table th,
+    .pika-week {
+      color: var(--lud-muted);
+    }
+
+    .pika-prev,
+    .pika-next {
+      background-color: var(--lud-gold);
+    }
+
+    .is-today .pika-button {
+      color: var(--lud-gold-bright);
+    }
+
+    .is-inrange .pika-button {
+      background-color: var(--lud-selected);
+    }
+
+    :is(.is-selected, .is-startrange, .is-endrange) .pika-button,
+    .pika-button:is(:hover, :focus-visible) {
+      color: var(--lud-ivory);
+      background-color: var(--lud-cta);
+      box-shadow: none;
+    }
+
+    .pika-day:focus {
+      background-color: var(--lud-selected);
+    }
+  }
+}
+
+/* PROFILE: identity shell, streams, messages, preferences and badge cards. */
+body.ludivion-public {
+  .user-main {
+    .about .details {
+      color: var(--lud-text);
+      background-color: var(--lud-bg-raised);
+      border-color: var(--lud-border);
+    }
+
+    .about .secondary {
+      dt {
+        color: var(--lud-muted);
+      }
+
+      dd {
+        color: var(--lud-text);
+      }
+    }
+
+    .user-profile-avatar .avatar-wrapper {
+      background-color: var(--lud-bg-deep);
+    }
+
+    .user-profile-names__primary {
+      color: var(--lud-gold-bright);
+    }
+
+    .staff-counters {
+      color: var(--lud-text);
+      background-color: var(--lud-panel-raised);
+
+      a,
+      > div {
+        color: var(--lud-text);
+      }
+    }
+
+    .user-navigation,
+    .nav-pills {
+      border-color: var(--lud-border);
+    }
+
+    .horizontal-overflow-nav .nav-pills {
+      flex-wrap: nowrap;
+
+      > li {
+        flex-shrink: 0;
+      }
+
+      > li > a.active {
+        color: var(--lud-gold-bright);
+        background-color: var(--lud-panel-raised);
+        box-shadow: inset 0 -2px var(--lud-gold);
+      }
+    }
+
+    .user-stream .user-stream-item:not(.deleted, .moderator-action) {
+      color: var(--lud-text);
+      background-color: var(--lud-bg-raised);
+      border-color: var(--lud-border);
+    }
+
+    .user-preferences :is(.instructions, .control-instructions) {
+      color: var(--lud-muted);
+    }
+
+    .user-stream {
+      .excerpt,
+      .type,
+      span.name {
+        color: var(--lud-text);
+      }
+
+      .relative-date,
+      .draft-type,
+      .user-stream-item__metadata ul {
+        color: var(--lud-muted);
+      }
+    }
+  }
+
+  .user-card,
+  .group-card {
+    background-color: var(--lud-panel);
+
+    .card-content {
+      color: var(--lud-text);
+      background-color: var(--lud-panel-glass);
+      border-color: var(--lud-border);
+    }
+
+    .username {
+      color: var(--lud-gold-bright);
+    }
+
+    .bio {
+      color: var(--lud-muted);
+    }
+
+    .names__primary a,
+    .names__secondary a {
+      color: var(--lud-text);
+    }
+
+    .metadata,
+    .metadata.email,
+    .metadata .desc {
+      color: var(--lud-muted);
+    }
+  }
+
+  .user-card .own-avatar-pencil--icon {
+    color: var(--lud-gold-bright);
+    background-color: var(--lud-bg-deep);
+  }
+
+  .badge-card {
+    --d-badge-card-background-color: var(--lud-bg-raised);
+    --content-border-color: var(--lud-border);
+
+    .badge-contents .badge-info,
+    .badge-contents .badge-link {
+      color: var(--lud-text);
+    }
+
+    .badge-granted,
+    .grant-count,
+    .grant-text {
+      color: var(--lud-muted);
+    }
+  }
+
+  .user-badge {
+    color: var(--lud-text);
+    background-color: var(--lud-panel-raised);
+    border-color: var(--lud-border);
+
+    &.disabled {
+      color: var(--lud-dim);
+      background-color: var(--lud-bg-raised);
+    }
+  }
+
+  .empty-state__container,
+  .empty-state__body {
+    color: var(--lud-text);
+  }
+
+  .empty-state__title {
+    color: var(--lud-gold-bright);
+  }
+
+  .empty-state__tip,
+  .empty-state__tip-text {
+    color: var(--lud-muted);
+  }
+}
+
+/* REVIEW: operational panels; penalty and moderation state colors stay native. */
+body.ludivion-public .reviewable {
+  .reviewable-filters,
+  .reviewable-item,
+  .review-item__primary-content,
+  .review-item__aside,
+  .reviewable-timeline .timeline-event {
+    color: var(--lud-text);
+    background-color: var(--lud-bg-raised);
+    border-color: var(--lud-border);
+  }
+
+  .filter-label {
+    color: var(--lud-muted);
+  }
+
+  .review-item__header {
+    color: var(--lud-ivory);
+    background-color: var(--lud-panel-raised);
+  }
+
+  .review-item__post-content,
+  .reviewable-note-form {
+    color: var(--lud-text);
+    background-color: var(--lud-panel-raised);
+  }
+
+  .reviewable-created-date,
+  .reviewable-permalink-copy .d-icon {
+    color: var(--lud-muted);
+  }
+
+  .reviewable-item .post-body.is-collapsed::after {
+    background: linear-gradient(to bottom, transparent, var(--lud-bg-raised));
+  }
+
+  .reviewable-item .post-body__toggle-btn {
+    color: var(--lud-muted);
+    background-color: var(--lud-panel-raised);
+
+    .d-icon {
+      color: currentColor;
+    }
+  }
+}
+
+/* CHAT: the plugin owns layout, resizing, keyboard height and semantic icons. */
+body.ludivion-public :is(.chat-drawer, .full-page-chat) {
+  --d-hover: var(--lud-panel-raised);
+  --d-chat-input-border-color: var(--lud-border);
+  --d-chat-input-bg-color: var(--lud-bg-deep);
+  --d-chat-input-focused-shadow: var(--lud-focus-glow);
+
+  .chat-drawer-container,
+  .chat-drawer-content,
+  .channels-list-container,
+  .chat-channel,
+  .chat-thread {
+    color: var(--lud-text);
+    background-color: var(--lud-panel);
+    border-color: var(--lud-border);
+  }
+
+  .chat-drawer-container {
+    box-shadow: var(--lud-shadow);
+  }
+
+  .c-navbar-container,
+  .c-footer,
+  .chat-channel__filter-bar,
+  .chat-channel-status {
+    color: var(--lud-text);
+    background-color: var(--lud-bg-raised);
+    border-color: var(--lud-border);
+  }
+
+  .c-navbar__title,
+  .chat-channel-divider,
+  .chat-channel-name,
+  .chat-channel-row,
+  .chat-channel-card__name-container {
+    color: var(--lud-text);
+  }
+
+  .chat-channel-row:is(:hover, :active, .active) {
+    color: var(--lud-ivory);
+    background-color: var(--lud-panel-raised);
+
+    .chat-channel-name {
+      color: var(--lud-ivory);
+    }
+
+    .d-icon-lock {
+      background-color: var(--lud-panel-raised);
+    }
+  }
+
+  .chat-channel-row:focus-visible {
+    outline: 2px solid var(--lud-gold-bright);
+    outline-offset: -2px;
+  }
+
+  .chat-channel-card {
+    background-color: var(--lud-bg-raised);
+  }
+
+  .c-navbar__star-channel-button.--starred {
+    color: var(--lud-gold-bright);
+  }
+
+  .c-unread-indicator,
+  .chat-channel-unread-indicator {
+    color: var(--lud-bg-deep);
+    background-color: var(--lud-gold);
+
+    .c-unread-indicator__number,
+    .chat-channel-unread-indicator__number {
+      color: var(--lud-bg-deep);
+    }
+
+    &.-urgent {
+      color: var(--lud-ivory);
+      background-color: var(--lud-success-bg);
+
+      .c-unread-indicator__number,
+      .chat-channel-unread-indicator__number {
+        color: var(--lud-ivory);
+      }
+    }
+  }
+
+  .chat-channel-card__description,
+  .chat-channel__metadata-date,
+  .chat-time,
+  .chat-channel .all-loaded-message,
+  .c-footer__item,
+  .c-footer__item .d-button-label {
+    color: var(--lud-muted);
+  }
+
+  .c-footer__item:is(.--active, :hover, :focus-visible) {
+    .d-icon,
+    .d-button-label {
+      color: var(--lud-gold-bright);
+    }
+  }
+
+  .chat-composer.is-focused .chat-composer__inner-container {
+    border-color: var(--lud-gold);
+  }
+
+  .chat-composer__input {
+    color: var(--lud-text);
+    background-color: transparent;
+    border: 0;
+
+    &:focus-visible {
+      outline-offset: -2px;
+    }
+  }
+
+  .btn-floating.open-new-message-btn {
+    background-color: var(--lud-cta);
+
+    .d-icon {
+      color: var(--lud-ivory);
+    }
+  }
+}
+
+/* COMPOSER OVERLAYS: Float-kit supplies the frame; emoji internals supply paint. */
+body.ludivion-public .emoji-picker {
+  color: var(--lud-text);
+  background-color: var(--lud-panel);
+  border-color: var(--lud-border);
+
+  .emoji-picker__filter-container,
+  .emoji-picker__sections-nav-wrap,
+  .emoji-picker__section-title-container {
+    --fade-color: var(--lud-panel-raised);
+    background-color: var(--lud-panel-raised);
+    border-color: var(--lud-border);
+  }
+
+  .emoji-picker__filter.filter-input-container {
+    background-color: var(--lud-bg-deep);
+  }
+
+  .emoji-picker__section-title {
+    color: var(--lud-gold);
+  }
+
+  .emoji:is(:hover, :focus-visible) {
+    background-color: var(--lud-panel-raised);
+  }
+}
+
+/* Scrollbars are decorative; native overflow and Firefox behavior stay intact. */
 body.ludivion-public
-  :is(.menu-panel, .d-modal, .select-kit-body, .fk-d-menu)
   :is(
-    .d-modal__header,
+    .quick-access-panel,
+    .panel-body-contents,
     .d-modal__body,
-    .d-modal__footer,
-    .panel-body,
-    .select-kit-collection
+    .dialog-body,
+    .select-kit-body,
+    .select-kit-collection,
+    .fk-d-menu__inner-content,
+    .chat-drawer-content,
+    .chat-messages-scroller
   ) {
-  color: var(--lud-text);
-  background: transparent;
-  border-color: var(--lud-border);
-}
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
 
-body.ludivion-public :is(.menu-panel, .fk-d-menu, .select-kit-body) {
-  max-width: min(94vw, 420px);
-}
+  &::-webkit-scrollbar-track {
+    background-color: var(--lud-bg-raised);
+  }
 
-body.ludivion-public :is(.menu-panel, .fk-d-menu, .select-kit-body) .d-icon {
-  color: var(--lud-muted);
-}
-
-body.ludivion-public :is(.menu-panel, .d-modal, .select-kit-body) a {
-  color: var(--lud-text);
-}
-
-body.ludivion-public :is(.menu-panel, .d-modal, .select-kit-body) a:hover {
-  color: var(--lud-gold-bright);
-}
-
-body.ludivion-public
-  :is(.select-kit-header, .search-menu .search-input, .search-container input) {
-  color: var(--lud-text);
-  background: var(--lud-bg-deep);
-  border: 1px solid var(--lud-border);
-}
-
-body.ludivion-public :is(.select-kit-row, .menu-panel li):hover {
-  background: var(--lud-panel-raised);
-}
-
-body.ludivion-public
-  :is(.select-kit-row.is-selected, .select-kit-row.is-highlighted) {
-  color: var(--lud-gold-bright);
-  background: var(--lud-panel-raised);
-}
-
-body.ludivion-public .search-menu .search-result-topic,
-body.ludivion-public .ludivion-archive-search .search-result-topic,
-body.ludivion-public .search-container .fps-result {
-  color: var(--lud-text);
-  background: var(--lud-panel);
-  border-bottom: 1px solid var(--lud-border);
-}
-
-body.ludivion-public .search-menu .search-result-topic:hover,
-body.ludivion-public .ludivion-archive-search .search-result-topic:hover,
-body.ludivion-public .search-container .fps-result:hover,
-body.ludivion-public .search-container .fps-result.selected {
-  background: var(--lud-panel-raised);
-}
-
-body.ludivion-public .search-container .fps-result .fps-topic {
-  color: var(--lud-ivory);
-}
-
-body.ludivion-public
-  .search-container
-  :is(.search-filters, .search-advanced-filters, .search-advanced-options) {
-  color: var(--lud-text);
-  background: var(--lud-panel);
-  border-color: var(--lud-border);
-}
-
-body.ludivion-public :is(.emoji-picker, .emoji-picker-emoji-area) {
-  color: var(--lud-text);
-  background: var(--lud-panel-glass);
-  border-color: var(--lud-border);
-}
-
-/* Identity, insignia and auth surfaces retain core behavior. */
-body.ludivion-public :is(.user-main, .user-card, .badge-card, .user-profile) {
-  color: var(--lud-text);
-  background: var(--lud-panel);
-  border-color: var(--lud-border);
-  border-radius: var(--lud-radius);
-}
-
-body.ludivion-public
-  :is(.user-main, .user-card)
-  :is(.user-profile, .user-card-background) {
-  color: var(--lud-text);
-  background: var(--lud-panel);
-  border-color: var(--lud-border);
-}
-
-body.ludivion-public :is(.user-main, .user-card) :is(.bio, .user-stat) {
-  color: var(--lud-muted);
-}
-
-body.ludivion-public .user-main :is(.nav-pills, .user-nav) {
-  border-bottom: 1px solid var(--lud-border);
-}
-
-body.ludivion-public :is(.user-stream-item, .user-summary) {
-  color: var(--lud-text);
-  background: var(--lud-bg-raised);
-  border-color: var(--lud-border);
-}
-
-body.ludivion-public :is(.user-main, .user-card) .username {
-  color: var(--lud-gold-bright);
-  font-family: var(--lud-display);
-}
-
-body.ludivion-public :is(.user-card, .badge-card, .user-badge) .badge {
-  color: var(--lud-gold-bright);
-  background: var(--lud-panel-raised);
-  border: 1px solid var(--lud-border);
-  border-radius: 4px;
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--lud-bronze);
+    border: 2px solid var(--lud-bg-raised);
+    border-radius: 8px;
+  }
 }
 
 /* Login, signup and activation use route-owned full pages in current core. */
@@ -1465,33 +2422,9 @@ body:is(
   }
 
   :is(.login-fullpage, .signup-fullpage, .activate-account, .password-reset) {
-    :is(input:not([type="checkbox"]):not([type="radio"]), textarea, select) {
-      color: var(--lud-text);
-      background: var(--lud-bg-deep);
-      border: 1px solid var(--lud-border);
-      border-radius: 5px;
-      max-width: 100%;
-    }
-
-    :is(input, textarea, select):focus {
-      border-color: var(--lud-gold);
-      box-shadow: 0 0 0 2px rgba(214, 172, 106, 0.16);
-    }
-
-    :is(input, textarea, select)::placeholder {
-      color: var(--lud-dim);
-      opacity: 1;
-    }
-
     :is(label, .control-label, .more-info) {
       color: var(--lud-muted);
     }
-  }
-
-  .btn-primary {
-    color: var(--lud-gold-bright);
-    background: var(--lud-panel-raised);
-    border: 1px solid var(--lud-border-strong);
   }
 }
 

@@ -169,8 +169,65 @@
     max-width: 100%;
   }
 
-  body.ludivion-public :is(.d-modal, .menu-panel, .select-kit-body) {
-    max-width: calc(100vw - 2 * var(--lud-space-2));
+  /* The full-screen modal wrapper and core's keyboard height stay untouched. */
+  body.ludivion-public {
+    .d-modal {
+      --modal-min-width: 0;
+    }
+
+    .d-modal__container,
+    .keyboard-shortcuts-modal.d-modal.--max .d-modal__container {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+
+    .dialog-content {
+      min-width: 0;
+    }
+
+    .menu-panel,
+    .select-kit-body,
+    .fk-d-menu__inner-content {
+      box-sizing: border-box;
+      max-width: calc(100vw - 2 * var(--lud-space-2));
+    }
+
+    #keyboard-shortcuts-help .keyboard-shortcuts-help__container {
+      columns: 1;
+    }
+
+    #keyboard-shortcuts-help td {
+      padding-inline: var(--lud-space-2);
+    }
+
+    .create-invite-with-roles-modal__link-share {
+      flex-wrap: wrap;
+
+      input.invite-link {
+        min-width: 0;
+      }
+    }
+
+    .d-modal__footer .btn,
+    .dialog-footer .btn {
+      max-width: 100%;
+      white-space: normal;
+    }
+
+    .user-main .user-navigation {
+      min-width: 0;
+
+      /* DHorizontalOverflowNav keeps its native scroll strip and overflow menu. */
+      .user-nav,
+      .messages-nav {
+        min-width: 0;
+        max-width: 100%;
+      }
+    }
+
+    .chat-drawer:not(.is-collapsed) {
+      max-width: 100%;
+    }
   }
 }
 
