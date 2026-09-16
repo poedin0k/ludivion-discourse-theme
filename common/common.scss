@@ -1628,6 +1628,47 @@ body.ludivion-public {
   }
 
   .create-invite-with-roles-modal {
+    /* Form Kit reads its own input tokens, including in native focus rules. */
+    .form-kit {
+      .form-kit__control-input,
+      .form-kit__control-textarea {
+        --token-color-background-input: var(--d-input-bg-color);
+        --token-color-background-accent-bolder: var(--d-input-focused-color);
+        --primary: var(--d-input-text-color);
+        --primary-low-mid: var(--lud-border);
+
+        &:is(:disabled, [readonly]) {
+          --token-color-background-input: var(--d-input-bg-color--disabled);
+          --primary: var(--d-input-text-color--disabled);
+        }
+      }
+
+      .form-kit__control-input[aria-invalid="true"],
+      .form-kit__control-textarea[aria-invalid="true"],
+      .form-kit__field.has-error
+        :is(.form-kit__control-input, .form-kit__control-textarea),
+      .has-errors :is(.form-kit__control-input, .form-kit__control-textarea) {
+        --primary-low-mid: var(--lud-danger);
+        --token-color-background-accent-bolder: var(--lud-danger);
+      }
+
+      .form-kit__container-title {
+        color: var(--lud-text);
+      }
+
+      .form-kit__container-optional,
+      .form-kit__container-subtitle,
+      .form-kit__container-description,
+      .form-kit__container-help-text,
+      .form-kit__meta {
+        color: var(--lud-muted);
+      }
+
+      .form-kit__char-counter.--exceeded {
+        color: var(--lud-danger);
+      }
+    }
+
     .create-invite-with-roles-modal__summary-row {
       border-color: var(--lud-border);
 
@@ -1852,9 +1893,20 @@ body.ludivion-public {
     .select-kit-header:not(.btn),
     &.combo-box .select-kit-header,
     &.multi-select .multi-select-header {
+      appearance: none;
       color: var(--lud-text);
       background-color: var(--lud-bg-deep);
+      background-image: none;
       border-color: var(--lud-border);
+    }
+
+    /* Paint the chooser itself in open/focus states, including Safari summary. */
+    &.combo-box.is-expanded .select-kit-header,
+    &.combo-box
+      .select-kit-header:is(:hover, :focus, :focus-visible, :active, .is-focused) {
+      color: var(--lud-text);
+      background-color: var(--lud-bg-deep);
+      background-image: none;
     }
 
     .select-kit-header.is-focused,
@@ -1865,7 +1917,8 @@ body.ludivion-public {
       border-color: var(--lud-gold);
     }
 
-    &.is-disabled .select-kit-header:not(.btn) {
+    &.is-disabled .select-kit-header:not(.btn),
+    &.combo-box.is-disabled .select-kit-header {
       color: var(--lud-dim);
       background-color: var(--lud-bg-raised);
     }
