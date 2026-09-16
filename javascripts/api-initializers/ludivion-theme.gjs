@@ -1,8 +1,59 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { apiInitializer } from "discourse/lib/api";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+
+// Consume the URL argument so Ember autotracks in-place topic navigation.
+// It runs the destructor before an update and when the element is removed.
+const topicReadingProgress = modifier((element, [routeURL]) => {
+  if (!routeURL) {
+    return;
+  }
+
+  const document = element.ownerDocument;
+  const viewport = document.defaultView;
+  const scrollingElement = document.scrollingElement || document.documentElement;
+  let frame = null;
+
+  const update = () => {
+    frame = null;
+    const distance =
+      scrollingElement.scrollHeight - scrollingElement.clientHeight;
+    const progress =
+      distance > 0
+        ? Math.min(1, Math.max(0, scrollingElement.scrollTop / distance))
+        : 0;
+    element.style.setProperty("--lud-reading-progress", String(progress));
+  };
+  const schedule = () => {
+    if (frame === null) {
+      frame = viewport.requestAnimationFrame(update);
+    }
+  };
+
+  element.style.setProperty("--lud-reading-progress", "0");
+  viewport.addEventListener("scroll", schedule, { passive: true });
+  viewport.addEventListener("resize", schedule, { passive: true });
+  // Posts and image loads may change the document height without a scroll event.
+  const observer = viewport.ResizeObserver
+    ? new viewport.ResizeObserver(schedule)
+    : null;
+  observer?.observe(document.body);
+  schedule();
+
+  return () => {
+    viewport.removeEventListener("scroll", schedule);
+    viewport.removeEventListener("resize", schedule);
+    observer?.disconnect();
+    if (frame !== null) {
+      viewport.cancelAnimationFrame(frame);
+    }
+    element.style.removeProperty("--lud-reading-progress");
+  };
+});
 
 // Match visible top-level categories supplied by Discourse. The configured
 // slugs are hints, not routes or IDs; the live category URL stays authoritative.
@@ -107,7 +158,7 @@ class LudivionCommunityShell extends Component {
   }
 
   get isTopic() {
-    return this.router.currentRouteName?.startsWith("topic") || /^\/t\//.test(this.path);
+    return /^topic(?:\.|$)/.test(this.router.currentRouteName || "") || /^\/t\//.test(this.path);
   }
 
   get isCategory() {
@@ -124,6 +175,7 @@ class LudivionCommunityShell extends Component {
           (hall.slugs.some((slug) => normalized(slug) === normalized(candidate.slug)) ||
             hall.names.some((name) => normalized(name) === normalized(candidate.name)))
       );
+      const count = category?.topic_count;
 
       return {
         ...hall,
@@ -131,6 +183,12 @@ class LudivionCommunityShell extends Component {
         href: category?.url || (category?.slug ? "/c/" + category.slug : "/categories"),
         categoryPath: category?.path,
         available: Boolean(category),
+        // BasicCategorySerializer supplies topic_count, not an active-today count.
+        // Missing data stays missing; a genuine zero is still displayed.
+        activityLabel:
+          Number.isInteger(count) && count >= 0
+            ? count.toLocaleString() + (count === 1 ? " TOPIC" : " TOPICS")
+            : null,
       };
     });
   }
@@ -153,7 +211,19 @@ class LudivionCommunityShell extends Component {
   <template>
     {{#unless this.isAdmin}}
       {{bodyClass "ludivion-public"}}
-      {{#if this.isTopic}}{{bodyClass "ludivion-topic"}}{{/if}}
+      {{#if settings.show_ludivion_background}}
+        <div class="ludivion-backdrop" aria-hidden="true"></div>
+      {{/if}}
+      {{#if this.isTopic}}
+        {{bodyClass "ludivion-topic"}}
+        {{#if settings.show_topic_reading_progress}}
+          <div
+            class="ludivion-topic-reading-progress"
+            aria-hidden="true"
+            {{topicReadingProgress this.router.currentURL}}
+          ></div>
+        {{/if}}
+      {{/if}}
       {{#if this.isCategory}}
         {{bodyClass "ludivion-category"}}
         {{bodyClass this.categoryIdentity}}
@@ -168,12 +238,26 @@ class LudivionCommunityShell extends Component {
             <div class="ludivion-forum-hero__rule" aria-hidden="true"></div>
             <span class="ludivion-forum-hero__motto">DISCUSS · EXPLORE · BUILD · BELONG</span>
             {{#if this.site.can_search}}
-              <div class="ludivion-archive-search">
+              <div class="ludivion-archive-search {{if settings.show_oracle_terminal 'ludivion-oracle-terminal'}}">
+                {{#if settings.show_oracle_terminal}}
+                  <span class="ludivion-oracle-terminal__eyebrow">
+                    <span class="ludivion-oracle-terminal__status" aria-hidden="true"></span>
+                    ORACLE ARCHIVE
+                  </span>
+                {{/if}}
                 <label for="ludivion-archive-search-input">SEARCH THE ARCHIVES</label>
-                <SearchMenu
-                  @location="ludivion-home"
-                  @searchInputId="ludivion-archive-search-input"
-                />
+                <div class="ludivion-archive-search__input">
+                  {{#if settings.show_oracle_terminal}}
+                    <span class="ludivion-oracle-terminal__icon" aria-hidden="true">{{dIcon "magnifying-glass"}}</span>
+                  {{/if}}
+                  <SearchMenu
+                    @location="ludivion-home"
+                    @searchInputId="ludivion-archive-search-input"
+                  />
+                </div>
+                {{#if settings.show_oracle_terminal}}
+                  <span class="ludivion-oracle-terminal__helper">Query the City's recorded knowledge.</span>
+                {{/if}}
               </div>
             {{/if}}
           </section>
@@ -191,13 +275,23 @@ class LudivionCommunityShell extends Component {
                 <a
                   class="ludivion-hall-card ludivion-hall-card--{{hall.identity}}"
                   href={{hall.href}}
-                  aria-label="{{hall.title}} — {{hall.description}}"
                 >
+                  {{#if settings.show_ambient_sigils}}
+                    <span class="ludivion-hall-card__ambient" aria-hidden="true">{{hall.number}}</span>
+                  {{/if}}
                   <span class="ludivion-hall-card__sigil" aria-hidden="true">{{hall.number}}</span>
                   <span class="ludivion-hall-card__body">
                     <span class="ludivion-hall-card__code">{{hall.code}}</span>
                     <span class="ludivion-hall-card__title">{{hall.title}}</span>
                     <span class="ludivion-hall-card__description">{{hall.description}}</span>
+                    {{#if settings.show_hall_activity}}
+                      {{#if hall.activityLabel}}
+                        <span class="ludivion-hall-card__activity">
+                          <span class="ludivion-hall-card__pulse" aria-hidden="true"></span>
+                          {{hall.activityLabel}}
+                        </span>
+                      {{/if}}
+                    {{/if}}
                     {{#unless hall.available}}
                       <span class="ludivion-hall-card__fallback">Browse all halls →</span>
                     {{/unless}}

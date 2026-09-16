@@ -1,24 +1,20 @@
 @media (max-width: 767px) {
   body.ludivion-public {
-    background-image: linear-gradient(
-      180deg,
-      rgba(6, 5, 4, 0.7),
-      var(--lud-bg) 530px
-    );
+    --lud-backdrop-blur: 2px;
+    --lud-backdrop-size: auto 560px;
+    --lud-backdrop-shade: rgba(6, 5, 4, 0.92);
+    --lud-backdrop-fade: rgba(6, 5, 4, 0.98);
+    --lud-sigil-opacity: 0.04;
+    --lud-sigil-active-opacity: 0.12;
   }
 
-  @if $show_ludivion_background == "true" or $show_ludivion_background == true {
-    body.ludivion-public:not(.ludivion-topic) {
-      background-image:
-        linear-gradient(180deg, rgba(6, 5, 4, 0.68), var(--lud-bg) 560px),
-        url($forum_hero);
-      background-size:
-        auto,
-        auto 530px;
-      background-position: center top;
-      background-repeat: no-repeat;
-      background-attachment: scroll;
-    }
+  body.ludivion-home {
+    --lud-backdrop-shade: rgba(6, 5, 4, 0.65);
+    --lud-backdrop-fade: rgba(6, 5, 4, 0.93);
+  }
+
+  .ludivion-backdrop {
+    max-height: 560px;
   }
 
   .ludivion-home-logo__mark {
@@ -54,6 +50,24 @@
   .ludivion-forum-hero__motto {
     letter-spacing: 0.1em;
     line-height: 1.5;
+  }
+
+  .ludivion-archive-search {
+    max-width: none;
+    margin-top: var(--lud-space-4);
+  }
+
+  .ludivion-oracle-terminal {
+    padding: var(--lud-space-3);
+  }
+
+  .ludivion-oracle-terminal label {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .ludivion-oracle-terminal__helper {
+    font-size: 0.66rem;
   }
 
   .ludivion-halls {

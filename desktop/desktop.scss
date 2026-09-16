@@ -1,4 +1,9 @@
 @media (min-width: 1000px) {
+  .ludivion-backdrop {
+    position: fixed;
+    height: 100vh;
+  }
+
   body.ludivion-home {
     --d-sidebar-width: 184px;
   }

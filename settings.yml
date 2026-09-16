@@ -10,3 +10,19 @@ show_hall_cards:
   default: true
   type: bool
   description: "Show Community Halls on the latest-topics homepage."
+show_oracle_terminal:
+  default: true
+  type: bool
+  description: "Give the homepage archive search its Oracle Terminal treatment."
+show_hall_activity:
+  default: true
+  type: bool
+  description: "Show available category topic counts on Community Hall cards."
+show_topic_reading_progress:
+  default: true
+  type: bool
+  description: "Show a decorative reading progress line below the topic header."
+show_ambient_sigils:
+  default: true
+  type: bool
+  description: "Show subtle decorative sigils on Community Hall cards."

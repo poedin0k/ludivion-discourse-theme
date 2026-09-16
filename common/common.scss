@@ -20,6 +20,13 @@
   --lud-border-strong: rgba(231, 187, 112, 0.56);
   --lud-shadow: 0 18px 54px rgba(0, 0, 0, 0.42);
   --lud-glow: 0 0 25px rgba(214, 172, 106, 0.13);
+  --lud-focus-glow: 0 0 0 2px rgba(214, 172, 106, 0.16);
+  --lud-backdrop-blur: 4px;
+  --lud-backdrop-size: 100% auto;
+  --lud-backdrop-shade: rgba(6, 5, 4, 0.87);
+  --lud-backdrop-fade: rgba(6, 5, 4, 0.96);
+  --lud-sigil-opacity: 0.06;
+  --lud-sigil-active-opacity: 0.16;
   --lud-radius: 8px;
   --lud-space-1: 4px;
   --lud-space-2: 8px;
@@ -92,40 +99,67 @@ body:is(
   background: var(--lud-bg);
   color: var(--lud-text);
   font-family: var(--lud-ui);
-  background-image: linear-gradient(
-    180deg,
-    rgba(4, 3, 2, 0.24) 0,
-    rgba(6, 5, 4, 0.83) 430px,
-    var(--lud-bg) 980px
-  );
-  background-repeat: no-repeat;
 }
 
-@if $show_ludivion_background == "true" or $show_ludivion_background == true {
-  body.ludivion-public:not(.ludivion-topic) {
-    background-image:
-      linear-gradient(
-        180deg,
-        rgba(4, 3, 2, 0.42) 0,
-        rgba(6, 5, 4, 0.85) 460px,
-        var(--lud-bg) 1000px
-      ),
-      url($forum_hero);
-    background-size: 100% auto;
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-  }
+body.ludivion-public {
+  position: relative;
+  isolation: isolate;
+}
 
-  body.ludivion-topic {
-    background-image:
-      linear-gradient(180deg, rgba(6, 5, 4, 0.91), var(--lud-bg) 530px),
-      url($forum_hero);
-    background-size: 100% auto;
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-  }
+body.ludivion-home {
+  --lud-backdrop-shade: rgba(4, 3, 2, 0.45);
+  --lud-backdrop-fade: rgba(6, 5, 4, 0.82);
+}
+
+/* Clip only the visual layer: blur/scale never touch content or sticky UI. */
+.ludivion-backdrop {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: -1;
+  height: 100%;
+  max-height: 1000px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ludivion-backdrop::before,
+.ludivion-backdrop::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+.ludivion-backdrop::before {
+  background: url($forum_hero) center top / var(--lud-backdrop-size) no-repeat;
+  filter: blur(var(--lud-backdrop-blur));
+  transform: scale(1.02);
+}
+
+.ludivion-backdrop::after {
+  background: linear-gradient(
+    180deg,
+    var(--lud-backdrop-shade),
+    var(--lud-backdrop-fade) 55%,
+    var(--lud-bg) 95%
+  );
+}
+
+.ludivion-topic-reading-progress {
+  position: fixed;
+  top: var(--header-offset, 60px);
+  inset-inline: 0;
+  z-index: z("header") - 1;
+  height: 2px;
+  pointer-events: none;
+}
+
+.ludivion-topic-reading-progress::before {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--lud-bronze), var(--lud-gold-bright));
+  transform: scaleX(var(--lud-reading-progress, 0));
+  transform-origin: left center;
+  content: "";
 }
 
 /* Header is shared with Admin; only the branding and chrome are customized. */
@@ -260,19 +294,7 @@ body.ludivion-public #footer .container .contents a[href]:hover {
 
 /* Core renders its PoweredByDiscourse component below the outlet wrapper. */
 body.ludivion-public .powered-by-discourse {
-  color: var(--lud-dim);
-  background: var(--lud-bg-deep);
-  border-top: 1px solid var(--lud-border);
-  font-size: 0.7rem;
-}
-
-body.ludivion-public .powered-by-discourse a {
-  color: var(--lud-dim);
-  text-decoration: none;
-}
-
-body.ludivion-public .powered-by-discourse a:hover {
-  color: var(--lud-muted);
+  display: none;
 }
 
 body.ludivion-public .sidebar-section-header-text {
@@ -479,6 +501,8 @@ body.ludivion-public :is(.alert-success, .success) {
 }
 
 .ludivion-archive-search {
+  box-sizing: border-box;
+  width: 100%;
   max-width: 520px;
   margin: var(--lud-space-5) auto 0;
   text-align: left;
@@ -498,6 +522,11 @@ body.ludivion-public :is(.alert-success, .success) {
   min-width: 0;
 }
 
+.ludivion-archive-search__input {
+  position: relative;
+  min-width: 0;
+}
+
 .ludivion-archive-search .search-input-wrapper {
   background: var(--lud-bg-deep);
   border: 1px solid var(--lud-border-strong);
@@ -506,12 +535,24 @@ body.ludivion-public :is(.alert-success, .success) {
 
 .ludivion-archive-search .search-input-wrapper:focus-within {
   border-color: var(--lud-gold-bright);
-  box-shadow: 0 0 0 2px rgba(214, 172, 106, 0.16);
+  box-shadow: var(--lud-focus-glow);
 }
 
 .ludivion-archive-search .search-input {
+  min-width: 0;
   background: transparent;
   color: var(--lud-text);
+  border: 0;
+}
+
+/* The wrapper owns the single frame and its keyboard focus treatment. */
+.ludivion-archive-search .search-input:focus-within {
+  outline: none;
+  box-shadow: none;
+}
+
+.ludivion-archive-search .searching {
+  flex-shrink: 0;
 }
 
 .ludivion-archive-search input {
@@ -520,6 +561,70 @@ body.ludivion-public :is(.alert-success, .success) {
   color: var(--lud-text);
   background: transparent;
   border: 0;
+}
+
+.ludivion-oracle-terminal {
+  position: relative;
+  padding: var(--lud-space-4);
+  background: var(--lud-panel-glass);
+  border: 1px solid var(--lud-border);
+  border-radius: var(--lud-radius);
+  box-shadow: var(--lud-glow);
+}
+
+.ludivion-oracle-terminal::before {
+  position: absolute;
+  inset: 0 var(--lud-space-4) auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lud-gold), transparent);
+  opacity: 0.5;
+  pointer-events: none;
+  content: "";
+}
+
+.ludivion-oracle-terminal__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--lud-space-2);
+  margin-bottom: var(--lud-space-2);
+  color: var(--lud-bronze);
+  font-size: 0.61rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.ludivion-oracle-terminal__status,
+.ludivion-hall-card__pulse {
+  display: inline-block;
+  flex: 0 0 4px;
+  width: 4px;
+  height: 4px;
+  background: var(--lud-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(214, 172, 106, 0.3);
+}
+
+.ludivion-oracle-terminal .search-input-wrapper {
+  min-height: 44px;
+  padding-inline-start: 34px;
+}
+
+.ludivion-oracle-terminal__icon {
+  position: absolute;
+  inset-inline-start: var(--lud-space-3);
+  top: 22px;
+  z-index: 1;
+  color: var(--lud-gold);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.ludivion-oracle-terminal__helper {
+  display: block;
+  margin-top: var(--lud-space-2);
+  color: var(--lud-muted);
+  font-size: 0.72rem;
+  line-height: 1.4;
 }
 
 .ludivion-halls {
@@ -588,6 +693,7 @@ body.ludivion-public :is(.alert-success, .success) {
 }
 
 .ludivion-hall-card__sigil {
+  position: relative;
   display: grid;
   place-items: center;
   flex: 0 0 48px;
@@ -601,8 +707,97 @@ body.ludivion-public :is(.alert-success, .success) {
 }
 
 .ludivion-hall-card__body {
+  position: relative;
   display: block;
   min-width: 0;
+}
+
+.ludivion-hall-card__activity {
+  display: flex;
+  align-items: center;
+  gap: var(--lud-space-2);
+  margin-top: var(--lud-space-2);
+  color: var(--lud-bronze);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  line-height: 1.4;
+}
+
+.ludivion-hall-card__pulse {
+  animation: ludivion-hall-pulse 3.6s ease-in-out infinite;
+}
+
+@keyframes ludivion-hall-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.ludivion-hall-card__ambient {
+  position: absolute;
+  inset-inline-end: 18px;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin-top: -48px;
+  color: var(--lud-gold-bright);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: var(--lud-sigil-opacity);
+  font-family: var(--lud-display);
+  font-size: 2rem;
+  pointer-events: none;
+  transition:
+    opacity 420ms ease,
+    transform 420ms ease,
+    box-shadow 420ms ease;
+}
+
+.ludivion-hall-card__ambient::before,
+.ludivion-hall-card__ambient::after {
+  position: absolute;
+  inset: 10px;
+  border: 1px solid currentColor;
+  content: "";
+}
+
+.ludivion-hall-card__ambient::before {
+  border-radius: 50%;
+}
+
+.ludivion-hall-card__ambient::after {
+  inset: 22px;
+  transform: rotate(45deg);
+}
+
+.ludivion-hall-card--journey .ludivion-hall-card__ambient::after {
+  border-inline: 0;
+}
+
+.ludivion-hall-card--seekers .ludivion-hall-card__ambient::after {
+  border-radius: 50% 0;
+}
+
+.ludivion-hall-card--technical .ludivion-hall-card__ambient::before {
+  border-radius: 0;
+}
+
+.ludivion-hall-card--commons .ludivion-hall-card__ambient::after {
+  border-radius: 50%;
+}
+
+.ludivion-hall-card:hover .ludivion-hall-card__ambient,
+.ludivion-hall-card:focus-visible .ludivion-hall-card__ambient {
+  opacity: var(--lud-sigil-active-opacity);
+  transform: translateX(-2px) rotate(2deg);
+  box-shadow: var(--lud-glow);
 }
 
 .ludivion-hall-card__code {
@@ -640,6 +835,7 @@ body.ludivion-public :is(.alert-success, .success) {
 }
 
 .ludivion-hall-card__arrow {
+  position: relative;
   margin-left: auto;
   align-self: flex-start;
   color: var(--lud-bronze);
@@ -1179,6 +1375,7 @@ body.ludivion-public
 }
 
 body.ludivion-public .search-menu .search-result-topic,
+body.ludivion-public .ludivion-archive-search .search-result-topic,
 body.ludivion-public .search-container .fps-result {
   color: var(--lud-text);
   background: var(--lud-panel);
@@ -1186,6 +1383,7 @@ body.ludivion-public .search-container .fps-result {
 }
 
 body.ludivion-public .search-menu .search-result-topic:hover,
+body.ludivion-public .ludivion-archive-search .search-result-topic:hover,
 body.ludivion-public .search-container .fps-result:hover,
 body.ludivion-public .search-container .fps-result.selected {
   background: var(--lud-panel-raised);
@@ -1315,6 +1513,19 @@ body.ludivion-public .alert {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ludivion-hall-card__pulse {
+    animation: none;
+  }
+
+  .ludivion-hall-card__ambient {
+    transition: opacity 160ms ease;
+  }
+
+  .ludivion-hall-card:hover .ludivion-hall-card__ambient,
+  .ludivion-hall-card:focus-visible .ludivion-hall-card__ambient {
+    transform: none;
+  }
+
   .ludivion-hall-card {
     transition: none;
   }
