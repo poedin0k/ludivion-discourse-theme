@@ -13,7 +13,8 @@
     --lud-backdrop-fade: rgba(6, 5, 4, 0.93);
   }
 
-  body.ludivion-topic {
+  body.ludivion-topic,
+  body.ludivion-category {
     --lud-backdrop-blur: 1.6px;
     --lud-backdrop-shade: rgba(6, 5, 4, 0.74);
     --lud-backdrop-fade: rgba(6, 5, 4, 0.78);
