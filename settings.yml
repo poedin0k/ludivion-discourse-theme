@@ -17,7 +17,7 @@ show_oracle_terminal:
 show_hall_activity:
   default: true
   type: bool
-  description: "Show available category topic counts on Community Hall cards."
+  description: "Show topic totals for each Community Hall, including its visible subcategories."
 show_topic_reading_progress:
   default: true
   type: bool

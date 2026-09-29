@@ -5,6 +5,7 @@ import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { apiInitializer } from "discourse/lib/api";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import categoryTopicCount from "../lib/category-topic-count";
 
 // Consume the URL argument so Ember autotracks in-place topic navigation.
 // It runs the destructor before an update and when the element is removed.
@@ -132,7 +133,7 @@ class LudivionHomeLogo extends Component {
   </template>
 }
 
-class LudivionCommunityShell extends Component {
+class LudivionCommunityState extends Component {
   @service router;
   @service site;
 
@@ -175,7 +176,7 @@ class LudivionCommunityShell extends Component {
           (hall.slugs.some((slug) => normalized(slug) === normalized(candidate.slug)) ||
             hall.names.some((name) => normalized(name) === normalized(candidate.name)))
       );
-      const count = category?.topic_count;
+      const count = categoryTopicCount(category, categories);
 
       return {
         ...hall,
@@ -183,8 +184,7 @@ class LudivionCommunityShell extends Component {
         href: category?.url || (category?.slug ? "/c/" + category.slug : "/categories"),
         categoryPath: category?.path,
         available: Boolean(category),
-        // BasicCategorySerializer supplies topic_count, not an active-today count.
-        // Missing data stays missing; a genuine zero is still displayed.
+        // Include visible descendants; missing data stays missing, not zero.
         activityLabel:
           Number.isInteger(count) && count >= 0
             ? count.toLocaleString() + (count === 1 ? " TOPIC" : " TOPICS")
@@ -207,7 +207,9 @@ class LudivionCommunityShell extends Component {
 
     return hall ? "ludivion-hall-" + hall.identity : "";
   }
+}
 
+class LudivionCommunityShell extends LudivionCommunityState {
   <template>
     {{#unless this.isAdmin}}
       {{bodyClass "ludivion-public"}}
@@ -230,6 +232,17 @@ class LudivionCommunityShell extends Component {
       {{/if}}
       {{#if this.isHomepage}}
         {{bodyClass "ludivion-home"}}
+      {{/if}}
+    {{/unless}}
+  </template>
+}
+
+// Render the introduction inside the same content column as the topic list.
+// The shell above the grid contains only route classes and decorative layers.
+class LudivionHome extends LudivionCommunityState {
+  <template>
+    {{#if this.isHomepage}}
+      <div class="ludivion-home-intro">
         {{#if settings.show_homepage_hero}}
           <section class="ludivion-forum-hero" aria-labelledby="ludivion-hero-title">
             <div class="ludivion-forum-hero__eyebrow">LUDIVION COMMUNITY NETWORK</div>
@@ -302,8 +315,8 @@ class LudivionCommunityShell extends Component {
             </div>
           </section>
         {{/if}}
-      {{/if}}
-    {{/unless}}
+      </div>
+    {{/if}}
   </template>
 }
 
@@ -366,6 +379,7 @@ export default apiInitializer((api) => {
   );
   api.renderInOutlet("home-logo", LudivionHomeLogo);
   api.renderInOutlet("below-site-header", LudivionCommunityShell);
+  api.renderInOutlet("above-main-container", LudivionHome);
   api.renderInOutlet("discovery-list-controls-above", LudivionLatestHeading);
   api.renderInOutlet("category-heading", LudivionHallHeading);
   api.registerValueTransformer("topic-list-item-class", ({ value, context }) =>

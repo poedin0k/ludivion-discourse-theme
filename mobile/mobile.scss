@@ -13,6 +13,12 @@
     --lud-backdrop-fade: rgba(6, 5, 4, 0.93);
   }
 
+  body.ludivion-topic {
+    --lud-backdrop-blur: 1.6px;
+    --lud-backdrop-shade: rgba(6, 5, 4, 0.74);
+    --lud-backdrop-fade: rgba(6, 5, 4, 0.78);
+  }
+
   .ludivion-backdrop {
     max-height: 560px;
   }
@@ -147,7 +153,10 @@
     font-size: 0.98rem;
   }
 
-  body.ludivion-topic .topic-body {
+  body.ludivion-topic .topic-post > article.boxed > .row:has(> .topic-avatar) {
+    --topic-avatar-width: 36px;
+    gap: var(--lud-space-2);
+    padding: var(--lud-space-2);
     border-radius: 5px;
   }
 
