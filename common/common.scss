@@ -2300,6 +2300,11 @@ body.ludivion-public .category-breadcrumb {
   }
 
   .select-kit.combo-box.tag-drop {
+    /* Match the category labels without shrinking the menu or its hit target. */
+    .selected-name {
+      font-size: 0.74rem;
+    }
+
     .selected-name,
     .angle-icon {
       color: inherit;
