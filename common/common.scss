@@ -1430,7 +1430,7 @@ body.ludivion-public
   overflow: hidden;
   border-radius: var(--lud-radius);
   pointer-events: none;
-  opacity: 0.32;
+  opacity: 0.24;
   filter: blur(1.5px);
 
   .category-logo.aspect-image,
@@ -1462,7 +1462,7 @@ body.ludivion-public
 
   .category-box-heading,
   .description {
-    text-shadow: 0 1px 4px var(--lud-bg-deep);
+    text-shadow: 0 1px 4px #000;
   }
 }
 
