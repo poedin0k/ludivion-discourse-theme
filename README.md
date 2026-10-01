@@ -28,7 +28,8 @@ variables or change the server's settings from JavaScript.
   Discourse's service topics describing categories are excluded by its counters.
 - Category artwork uses the category's uploaded logo in native box layouts.
   It covers approximately 90% of the card with dimming and blur. Text, links and
-  small subcategory icons remain separate and sharp.
+  small subcategory icons remain separate and sharp. Descriptions wrap without
+  a four-line cutoff; cards grow with their content and retain inner spacing.
 - Category page headers show their name and description without the uploaded
   logo or a surrounding frame; artwork remains visible in category cards.
 - Topic and category pages share the backdrop with about 20% less dimming and

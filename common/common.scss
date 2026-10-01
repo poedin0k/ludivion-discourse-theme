@@ -1368,12 +1368,14 @@ body.ludivion-public :is(.category-boxes, .category-boxes-with-topics) {
   --category-boxes-description-text-color: var(--lud-text);
 
   .category-box {
+    min-width: 0;
     padding: 0;
     --category-badge-title-color: var(--lud-gold-bright);
   }
 
   .category-box-inner {
     position: relative;
+    min-width: 0;
     isolation: isolate;
     overflow: hidden;
     border: 0;
@@ -1392,8 +1394,20 @@ body.ludivion-public :is(.category-boxes, .category-boxes-with-topics) {
   }
 
   .category-box .description {
+    // Core clamps these to four lines, leaving unused space in artwork cards.
+    // Let the content size the card instead, including at narrow widths.
+    display: block;
+    max-height: none;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+    -webkit-line-clamp: unset;
     color: var(--lud-text);
     line-height: 1.6;
+
+    .overflow {
+      max-height: none;
+    }
   }
 
   .featured-topics {
@@ -1430,8 +1444,8 @@ body.ludivion-public
   overflow: hidden;
   border-radius: var(--lud-radius);
   pointer-events: none;
-  opacity: 0.24;
-  filter: blur(1.5px);
+  opacity: 0.18;
+  filter: blur(2px);
 
   .category-logo.aspect-image,
   picture {
@@ -1458,11 +1472,11 @@ body.ludivion-public
 body.ludivion-public
   .category-boxes-with-topics
   .category-box-inner:has(> .category-box-heading .category-logo img) {
-  min-height: 230px;
+  min-height: 260px;
 
   .category-box-heading,
   .description {
-    text-shadow: 0 1px 4px #000;
+    text-shadow: 0 2px 3px #000, 0 0 8px #000;
   }
 }
 
