@@ -2628,6 +2628,278 @@ body.ludivion-public {
   }
 }
 
+/* GROUPS: native members, activity and management share the public theme skin.
+   Keep the responsive table, overflow navigation and configured flair intact. */
+body.ludivion-public .container.group {
+  --d-content-background: var(--lud-panel);
+  --content-border-color: var(--lud-border);
+  --table-border-color: var(--lud-border);
+
+  color: var(--lud-text);
+  background-color: transparent;
+
+  .group-details-container,
+  .user-content {
+    color: var(--lud-text);
+    background-color: var(--lud-panel);
+    border: 1px solid var(--lud-border);
+    border-radius: var(--lud-radius);
+    padding: var(--lud-space-4);
+  }
+
+  .group-info-names,
+  .user-content-wrapper,
+  .user-primary-navigation,
+  .user-secondary-navigation {
+    min-width: 0;
+  }
+
+  .group-info-name {
+    color: var(--lud-gold-bright);
+    font-family: var(--lud-display);
+    font-weight: 500;
+    letter-spacing: 0.025em;
+    overflow-wrap: anywhere;
+  }
+
+  .group-info-full-name,
+  .group-info-mention-name {
+    color: var(--lud-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .group-bio {
+    color: var(--lud-text);
+    overflow-wrap: anywhere;
+  }
+
+  .group-automatic-tooltip {
+    color: var(--lud-gold-bright);
+    background-color: var(--lud-panel-raised);
+    border: 1px solid var(--lud-border);
+    border-radius: var(--lud-radius);
+
+    .d-icon {
+      color: currentcolor;
+    }
+  }
+
+  .group-delete-tooltip {
+    color: var(--lud-text);
+    background-color: var(--lud-selected);
+  }
+
+  .horizontal-overflow-nav .nav-pills {
+    flex-wrap: nowrap;
+
+    > li {
+      flex-shrink: 0;
+    }
+
+    > li > a.active {
+      color: var(--lud-gold-bright);
+      background-color: var(--lud-panel-raised);
+      box-shadow: inset 0 -2px var(--lud-gold);
+    }
+  }
+
+  .group-members-actions {
+    gap: var(--lud-space-2);
+  }
+
+  .group-members-manage {
+    flex-wrap: wrap;
+  }
+
+  .group-username-filter {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .group-members {
+    .directory-table__value,
+    .group-owner-label,
+    .user-info .user-detail .name-line a,
+    .user-info .details {
+      color: var(--lud-text);
+    }
+
+    .directory-table__column-header,
+    .directory-table__label,
+    .user-info .name,
+    .user-info .title {
+      color: var(--lud-muted);
+    }
+
+    .user-info .username {
+      color: var(--lud-gold-bright);
+    }
+
+    .me,
+    .me .directory-table__cell {
+      background-color: var(--lud-selected);
+    }
+  }
+
+  /* Both stream renderers are used across supported Discourse versions. */
+  :is(.post-list, .user-stream) {
+    :is(.post-list-item, .user-stream-item, .item) {
+      color: var(--lud-text);
+      border-color: var(--lud-border);
+
+      &:not(.deleted, .moderator-action) {
+        background-color: var(--lud-panel);
+      }
+
+      &.moderator-action {
+        background-color: var(--lud-selected);
+      }
+
+      &.deleted {
+        background-color: var(--lud-danger-bg);
+      }
+    }
+
+    .post-list-item--selected:not(.deleted, .moderator-action) {
+      background-color: var(--lud-selected);
+      border-inline-start-color: var(--lud-gold);
+    }
+
+    .excerpt,
+    .type,
+    .post-member-info,
+    span.name {
+      color: var(--lud-text);
+    }
+
+    .relative-date,
+    .time,
+    .user-title,
+    .post-list-item__metadata,
+    .user-stream-item__metadata ul {
+      color: var(--lud-muted);
+    }
+
+    .stream-topic-title a {
+      color: var(--lud-gold-bright);
+    }
+  }
+
+  .groups-form {
+    .alert-warning {
+      color: var(--lud-warning);
+      background-color: var(--lud-selected);
+      border-color: var(--lud-border-strong);
+    }
+
+    .control-instructions,
+    .instructions {
+      color: var(--lud-muted);
+    }
+
+    .input-xxlarge,
+    .group-flair-inputs {
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+
+    .group-form-bio {
+      --d-hover: var(--lud-panel-raised);
+      --d-selected: var(--lud-selected);
+      --d-selected-text-color: var(--lud-gold-bright);
+
+      color: var(--lud-text);
+
+      .d-editor-textarea-wrapper {
+        background-color: var(--lud-bg-deep);
+        border-color: var(--lud-border);
+      }
+
+      .d-editor-textarea-wrapper:focus-within {
+        outline: 2px solid var(--lud-gold-bright);
+        outline-offset: 2px;
+      }
+
+      textarea.d-editor-input,
+      .ProseMirror {
+        color: var(--lud-text);
+        caret-color: var(--lud-gold-bright);
+        background-color: transparent;
+      }
+
+      textarea.d-editor-input {
+        border: 0;
+        box-shadow: none;
+        outline: none;
+      }
+
+      .d-editor-preview {
+        color: var(--lud-text);
+        background-color: var(--lud-bg-raised);
+        border-radius: var(--lud-radius);
+      }
+
+      .d-editor-button-bar {
+        border-color: var(--lud-border);
+
+        .btn {
+          color: var(--lud-muted);
+
+          .d-icon {
+            color: currentcolor;
+          }
+
+          &:is(:hover, :focus-visible, .active, .--active, [aria-pressed="true"]) {
+            color: var(--lud-gold-bright);
+            background-color: var(--lud-selected);
+          }
+        }
+      }
+
+      .toolbar-separator {
+        background-color: var(--lud-border);
+      }
+
+      .composer-toggle-switch__slider {
+        background-color: var(--lud-panel-raised);
+
+        &::before {
+          background-color: var(--lud-selected);
+          box-shadow: inset 0 0 0 1px var(--lud-border-strong);
+        }
+      }
+
+      .composer-toggle-switch__left-icon,
+      .composer-toggle-switch__right-icon {
+        color: var(--lud-gold-bright);
+      }
+    }
+
+    .group-flair-inputs {
+      .file-uploader__preview {
+        box-sizing: border-box;
+        max-width: 100%;
+        background-color: var(--lud-bg-raised);
+        border-color: var(--lud-border);
+      }
+
+      .file-uploader__controls label {
+        color: var(--lud-text);
+      }
+
+      .avatar-flair-preview .avatar-wrapper {
+        background-color: var(--lud-bg-raised);
+      }
+    }
+
+    .group-manage-save-button {
+      flex-wrap: wrap;
+      gap: var(--lud-space-2);
+    }
+  }
+}
+
 /* REVIEW: operational panels; penalty and moderation state colors stay native. */
 body.ludivion-public .reviewable {
   .reviewable-filters,

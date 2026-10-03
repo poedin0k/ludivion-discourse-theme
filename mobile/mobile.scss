@@ -235,6 +235,38 @@
       }
     }
 
+    .container.group {
+      .group-details-container,
+      .user-content {
+        padding: var(--lud-space-3);
+      }
+
+      .group-info {
+        flex-wrap: wrap;
+      }
+
+      .group-info-names {
+        flex-basis: calc(100% - 60px);
+      }
+
+      .group-details-button {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .group-details-button .btn,
+      .group-members-manage .btn {
+        max-width: 100%;
+        white-space: normal;
+      }
+
+      .groups-form .radios {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--lud-space-2);
+      }
+    }
+
     .chat-drawer:not(.is-collapsed) {
       max-width: 100%;
     }

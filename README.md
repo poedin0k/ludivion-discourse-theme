@@ -62,6 +62,11 @@ After updating the installed theme, check:
 7. Welcome search: one outer frame and a working magnifier. Dropdown search:
    no inner yellow ring, with a visible focus surface and working filtering and
    keyboard selection in both Select Kit and DMenu.
+8. Groups (`/g/<name>`, `/activity/posts`, `/manage/profile`): readable headers,
+   member tables and activity on dark panels. Check navigation, member filtering,
+   description editing in both editor modes, flair upload/preview and saving at
+   desktop and mobile widths. Configured flair colors and native permissions
+   remain intact; management checks require an authorized group owner or admin.
 
 Local CSS fixtures can validate colors and geometry against the deployed core
 styles. They do not replace these checks in a running Discourse application.
