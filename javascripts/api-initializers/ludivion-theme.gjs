@@ -7,6 +7,98 @@ import { apiInitializer } from "discourse/lib/api";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import categoryTopicCount from "../lib/category-topic-count";
 
+// The asset already contains forward + reverse frames. Native looping keeps
+// playback smooth without unsupported negative playbackRate or repeated seeks.
+const homepageBackdropVideo = modifier((video, [uploads]) => {
+  const document = video.ownerDocument;
+  const motion = document.defaultView.matchMedia("(prefers-reduced-motion: reduce)");
+  const sources = [
+    [uploads?.forum_hero_video, "video/webm"],
+    [uploads?.forum_hero_video_mp4, "video/mp4"],
+  ].filter(([url, type]) => url && video.canPlayType(type));
+  let sourceIndex = 0;
+  let disposed = false;
+  let request = 0;
+
+  video.muted = true;
+  video.defaultMuted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.poster = uploads?.forum_hero || "";
+
+  const hide = () => video.classList.remove("is-playing");
+  const reveal = () => {
+    if (!disposed && !motion.matches && !document.hidden) {
+      video.classList.add("is-playing");
+    }
+  };
+  const play = () => {
+    if (disposed || motion.matches || document.hidden || !sources[sourceIndex]) {
+      return;
+    }
+    const currentRequest = ++request;
+    video.muted = true;
+    video.play().catch(() => {
+      if (!disposed && request === currentRequest) {
+        hide(); // Autoplay restrictions leave the static background usable.
+      }
+    });
+  };
+  const load = () => {
+    hide();
+    if (motion.matches || !sources[sourceIndex]) {
+      return;
+    }
+    video.src = sources[sourceIndex][0];
+    video.load();
+    play();
+  };
+  const failed = () => {
+    hide();
+    sourceIndex++;
+    load(); // Try MP4 if WebM is advertised but cannot actually be decoded.
+  };
+  const visibilityChanged = () => {
+    if (document.hidden) {
+      request++;
+      video.pause();
+    } else {
+      play();
+    }
+  };
+  const motionChanged = () => {
+    request++;
+    if (motion.matches) {
+      hide();
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    } else {
+      sourceIndex = 0;
+      load();
+    }
+  };
+
+  video.addEventListener("playing", reveal);
+  video.addEventListener("error", failed);
+  document.addEventListener("visibilitychange", visibilityChanged);
+  motion.addEventListener("change", motionChanged);
+  load();
+
+  return () => {
+    disposed = true;
+    request++;
+    video.removeEventListener("playing", reveal);
+    video.removeEventListener("error", failed);
+    document.removeEventListener("visibilitychange", visibilityChanged);
+    motion.removeEventListener("change", motionChanged);
+    video.pause();
+    video.removeAttribute("src");
+    video.load();
+    hide();
+  };
+});
+
 // Consume the URL argument so Ember autotracks in-place topic navigation.
 // It runs the destructor before an update and when the element is removed.
 const topicReadingProgress = modifier((element, [routeURL]) => {
@@ -214,7 +306,19 @@ class LudivionCommunityShell extends LudivionCommunityState {
     {{#unless this.isAdmin}}
       {{bodyClass "ludivion-public"}}
       {{#if settings.show_ludivion_background}}
-        <div class="ludivion-backdrop" aria-hidden="true"></div>
+        <div class="ludivion-backdrop" aria-hidden="true">
+          {{#if this.isHomepage}}
+            <video
+              class="ludivion-backdrop__video"
+              muted
+              loop
+              playsinline
+              preload="none"
+              tabindex="-1"
+              {{homepageBackdropVideo settings.theme_uploads}}
+            ></video>
+          {{/if}}
+        </div>
       {{/if}}
       {{#if this.isTopic}}
         {{bodyClass "ludivion-topic"}}

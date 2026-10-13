@@ -144,6 +144,21 @@ body.ludivion-category {
   content: "";
 }
 
+.ludivion-backdrop__video {
+  position: absolute;
+  inset: 0 auto auto 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  filter: blur(var(--lud-backdrop-blur));
+  transform: scale(1.02);
+
+  &.is-playing {
+    opacity: 1;
+  }
+}
+
 .ludivion-backdrop::before {
   background: url($forum_hero) center top / var(--lud-backdrop-size) no-repeat;
   filter: blur(var(--lud-backdrop-blur));
@@ -3234,6 +3249,10 @@ body.ludivion-public .alert {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ludivion-backdrop__video.is-playing {
+    display: none;
+  }
+
   .ludivion-home-social__link {
     transition: none;
   }

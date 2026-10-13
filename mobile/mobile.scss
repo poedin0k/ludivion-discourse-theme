@@ -24,6 +24,16 @@
     max-height: 560px;
   }
 
+  .ludivion-backdrop__video {
+    inset-inline-start: 50%;
+    width: auto;
+    min-width: 100%;
+    max-width: none;
+    height: 560px;
+    object-fit: cover;
+    transform: translateX(-50%) scale(1.02);
+  }
+
   .ludivion-home-logo__mark {
     width: 36px;
     height: 36px;

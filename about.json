@@ -5,6 +5,8 @@
   "component": false,
   "assets": {
     "forum_hero": "assets/forum-hero.webp",
+    "forum_hero_video": "assets/forum-hero-loop.webm",
+    "forum_hero_video_mp4": "assets/forum-hero-loop.mp4",
     "ludivion_logo": "assets/ludivion-logo.png",
     "ludivion_social_x": "assets/social-x.svg",
     "ludivion_social_discord": "assets/social-discord.svg",

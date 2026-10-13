@@ -38,6 +38,26 @@ variables or change the server's settings from JavaScript.
 - Topic and category pages share the backdrop with about 20% less dimming and
   blur than the original revision. Images inside posts are unaffected.
 
+## Homepage background video
+
+The homepage uses the silent `forum-hero-loop.webm` asset, with an H.264 MP4
+alternative for browsers that cannot play WebM. Both contain a forward pass
+followed by the reversed frames; native looping repeats this complete sequence.
+The original `assets/forum-hero.webm` remains the source, not the served asset.
+`forum-hero.webp` remains visible until playback starts, and on download,
+decoding or autoplay failure. Category/topic pages continue using the image.
+Reduced-motion preferences keep the image and prevent video loading; playback
+pauses when the tab is hidden and is cleaned up when leaving the homepage.
+
+After replacing the source, regenerate both served assets with Node.js and
+FFmpeg (including the `libvpx-vp9` and `libx264` encoders):
+
+```sh
+node scripts/build-hero-video.mjs
+```
+
+An FFmpeg executable outside PATH can be selected with `FFMPEG_BIN`.
+
 ## Verification
 
 The category counting tests require Node.js 22 or newer:
@@ -50,7 +70,9 @@ After updating the installed theme, check:
 
 1. Home at desktop and mobile widths: sidebar starts under the header, cards
    align with the topic list, and the sidebar toggle still works. Below the hero
-   search, check the three social links, icons and keyboard focus.
+   search, check the three social links, icons and keyboard focus. Check silent
+   forward/reverse video playback, image fallback while loading, MP4 recovery,
+   reduced-motion behavior and navigation away from/back to the homepage.
 2. Topic pagination and returning from a topic: no light row flash.
 3. Login and signup: dark header, fully visible logo, readable fields.
 4. Topics: gold title both above the post and in the sticky header, avatar inside
