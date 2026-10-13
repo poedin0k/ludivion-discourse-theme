@@ -273,6 +273,38 @@ class LudivionHome extends LudivionCommunityState {
                 {{/if}}
               </div>
             {{/if}}
+            <nav class="ludivion-home-social" aria-label="Ludivion social links">
+              <a
+                class="ludivion-home-social__link"
+                href="https://x.com/ludivion_hub"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Ludivion on X"
+                title="X"
+              >
+                <span class="ludivion-home-social__icon ludivion-home-social__icon--x" aria-hidden="true"></span>
+              </a>
+              <a
+                class="ludivion-home-social__link"
+                href="https://discord.gg/ludivion"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Ludivion on Discord"
+                title="Discord"
+              >
+                <span class="ludivion-home-social__icon ludivion-home-social__icon--discord" aria-hidden="true"></span>
+              </a>
+              <a
+                class="ludivion-home-social__link"
+                href="https://ludivion.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit Ludivion"
+                title="Ludivion"
+              >
+                <span class="ludivion-home-social__icon ludivion-home-social__icon--ludivion" aria-hidden="true"></span>
+              </a>
+            </nav>
           </section>
         {{/if}}
 

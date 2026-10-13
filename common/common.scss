@@ -744,6 +744,74 @@ body.ludivion-public :is(.alert-success, .success) {
   letter-spacing: 0.22em;
 }
 
+/* Homepage links use bundled assets, so no cross-origin masks are needed. */
+.ludivion-home-social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--lud-space-3);
+  margin-top: var(--lud-space-4);
+}
+
+.ludivion-home-social__link {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 44px;
+  height: 44px;
+  color: var(--lud-gold);
+  background: var(--lud-bg-raised);
+  border: 1px solid var(--lud-border);
+  border-radius: 50%;
+  text-decoration: none;
+  transition: color 160ms ease, background-color 160ms ease,
+    border-color 160ms ease, box-shadow 160ms ease;
+
+  &:visited {
+    color: var(--lud-gold);
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--lud-gold-bright);
+    background: var(--lud-panel-raised);
+    border-color: var(--lud-gold);
+    box-shadow: var(--lud-glow);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--lud-gold-bright);
+    outline-offset: 3px;
+  }
+
+  &:active {
+    background: var(--lud-selected);
+  }
+}
+
+.ludivion-home-social__icon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background-color: currentColor;
+  mask: var(--lud-social-icon) center / contain no-repeat;
+
+  &--x {
+    --lud-social-icon: url(#{$ludivion_social_x});
+  }
+
+  &--discord {
+    --lud-social-icon: url(#{$ludivion_social_discord});
+  }
+
+  &--ludivion {
+    // Preserve the supplied favicon's colors rather than using it as a mask.
+    background: url($ludivion_social_mark) center / contain no-repeat;
+    mask: none;
+  }
+}
+
 .ludivion-archive-search {
   box-sizing: border-box;
   width: 100%;
@@ -3166,6 +3234,10 @@ body.ludivion-public .alert {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ludivion-home-social__link {
+    transition: none;
+  }
+
   .ludivion-hall-card__pulse {
     animation: none;
   }

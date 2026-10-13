@@ -26,6 +26,9 @@ variables or change the server's settings from JavaScript.
 - Community Hall counts include the parent and all descendants visible to the
   current user. Missing counts are hidden; actual zero counts remain zero.
   Discourse's service topics describing categories are excluded by its counters.
+- The homepage hero includes X, Discord and Ludivion links below its search.
+  Icons are bundled as theme assets; the links have hover and keyboard focus
+  states and 44px touch targets. They follow the homepage hero visibility setting.
 - Category artwork uses the category's uploaded logo in native box layouts.
   It covers approximately 90% of the card with dimming and blur. Text, links and
   small subcategory icons remain separate and sharp. Descriptions wrap without
@@ -46,7 +49,8 @@ node --test tests/category-topic-count.test.mjs
 After updating the installed theme, check:
 
 1. Home at desktop and mobile widths: sidebar starts under the header, cards
-   align with the topic list, and the sidebar toggle still works.
+   align with the topic list, and the sidebar toggle still works. Below the hero
+   search, check the three social links, icons and keyboard focus.
 2. Topic pagination and returning from a topic: no light row flash.
 3. Login and signup: dark header, fully visible logo, readable fields.
 4. Topics: gold title both above the post and in the sticky header, avatar inside
