@@ -26,3 +26,8 @@ show_ambient_sigils:
   default: true
   type: bool
   description: "Show subtle decorative sigils on Community Hall cards."
+svg_icons:
+  default: "music|play|pause|backward-step|forward-step|shuffle|repeat|xmark"
+  type: list
+  list_type: compact
+  description: "Icons used by the music controls."

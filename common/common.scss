@@ -297,6 +297,243 @@ body:is(
   border-right: 1px solid var(--lud-border);
 }
 
+/* Music owns only its header slot and controls; native menus stay untouched. */
+.d-header .before-header-panel-outlet:has(.ludivion-music) {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-inline: clamp(8px, 2vw, 32px);
+  container-type: inline-size;
+}
+
+.d-header .before-header-panel-outlet:has(.ludivion-music--compact) {
+  flex: 0 0 auto;
+  padding-inline: 8px;
+  container-type: normal;
+}
+
+.ludivion-music {
+  position: relative;
+  width: min(100%, 460px);
+  min-width: 0;
+  margin-inline: auto;
+  color: var(--lud-text);
+  font-family: var(--lud-ui);
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__track-summary {
+    display: grid;
+    gap: 2px;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-inline-end: 8px;
+
+    span {
+      color: var(--lud-muted);
+      font-size: 0.65rem;
+    }
+
+    strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--lud-gold-bright);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+  }
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    flex: 0 0 44px;
+    width: 44px;
+    min-height: 44px;
+    padding: 0;
+    appearance: none;
+    border: 1px solid var(--lud-border);
+    border-radius: 6px;
+    background: var(--lud-bg-raised);
+    color: var(--lud-muted);
+    cursor: pointer;
+
+    .d-icon {
+      width: 17px;
+      height: 17px;
+      color: inherit;
+    }
+
+    &:is(:hover, :focus-visible, [aria-expanded="true"], [aria-pressed="true"]) {
+      border-color: var(--lud-border-strong);
+      background: var(--lud-selected);
+      color: var(--lud-gold-bright);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--lud-gold-bright);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+  }
+
+  &__panel {
+    position: absolute;
+    z-index: 1;
+    top: calc(100% + 10px);
+    inset-inline-end: 0;
+    box-sizing: border-box;
+    display: grid;
+    gap: 14px;
+    width: 320px;
+    max-width: calc(100vw - 16px);
+    max-height: calc(100dvh - var(--header-offset, 64px) - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 16px;
+    border: 1px solid var(--lud-border-strong);
+    border-radius: var(--lud-radius);
+    background: var(--lud-panel);
+    box-shadow: var(--lud-shadow);
+    color: var(--lud-text);
+    text-align: start;
+    white-space: normal;
+  }
+
+  &__panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    strong {
+      color: var(--lud-gold-bright);
+      font-size: 1rem;
+    }
+  }
+
+  &__status,
+  &__modes {
+    margin: 0;
+    color: var(--lud-muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  &__volume {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    color: var(--lud-text);
+    font-size: 0.85rem;
+
+    > span {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    input[type="range"] {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 44px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      accent-color: var(--lud-gold);
+      cursor: pointer;
+    }
+  }
+
+  &__current-track {
+    display: grid;
+    gap: 4px;
+    overflow-wrap: anywhere;
+
+    span {
+      color: var(--lud-muted);
+      font-size: 0.75rem;
+    }
+
+    strong {
+      color: var(--lud-gold-bright);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+
+  &__transport {
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+  }
+
+  &--compact {
+    width: 44px;
+
+    .ludivion-music__track-summary,
+    .ludivion-music__desktop {
+      display: none;
+    }
+  }
+}
+
+@container (max-width: 340px) {
+  .ludivion-music__track-summary,
+  .ludivion-music__desktop {
+    display: none;
+  }
+
+  .ludivion-music__toolbar {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 1100px) {
+  .d-header .before-header-panel-outlet:has(.ludivion-music) {
+    flex: 0 0 auto;
+    padding-inline: 8px;
+    margin-inline-start: auto;
+    container-type: normal;
+  }
+
+  .ludivion-music {
+    width: 44px;
+
+    &__track-summary,
+    &__desktop {
+      display: none;
+    }
+
+    &__panel {
+      position: fixed;
+      top: calc(var(--header-offset, 64px) + 8px);
+      inset-inline-end: 8px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .d-header:has(.ludivion-music) .ludivion-home-logo__wordmark {
+    display: none;
+  }
+
+  .d-header .before-header-panel-outlet:has(.ludivion-music) {
+    padding-inline: 4px;
+  }
+}
+
 .admin-sidebar a {
   color: var(--lud-muted);
 }

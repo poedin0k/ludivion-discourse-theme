@@ -10,7 +10,13 @@
     "ludivion_logo": "assets/ludivion-logo.png",
     "ludivion_social_x": "assets/social-x.svg",
     "ludivion_social_discord": "assets/social-discord.svg",
-    "ludivion_social_mark": "assets/social-ludivion.png"
+    "ludivion_social_mark": "assets/social-ludivion.png",
+    "music_treasury_chamber": "assets/music/TreasuryChamber.mp3",
+    "music_shadowy_reverberation": "assets/music/ShadowyReverberation.mp3",
+    "music_roulette_ticking": "assets/music/RouletteTicking.mp3",
+    "music_nocturnal_salon": "assets/music/NocturnalSalon.mp3",
+    "music_quietly_dangerous": "assets/music/QuietlyDangerous.mp3",
+    "music_obsidian_core": "assets/music/ObsidianCore.mp3"
   },
   "color_schemes": {
     "Ludivion Dark": {

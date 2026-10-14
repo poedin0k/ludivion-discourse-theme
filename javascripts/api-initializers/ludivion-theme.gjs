@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import SearchMenu from "discourse/components/search-menu";
@@ -6,6 +7,8 @@ import bodyClass from "discourse/helpers/body-class";
 import { apiInitializer } from "discourse/lib/api";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import categoryTopicCount from "../lib/category-topic-count";
+import ForumMusicService from "../lib/forum-music-service";
+import ForumMusic from "../components/forum-music";
 
 // The asset already contains forward + reverse frames. Native looping keeps
 // playback smooth without unsupported negative playbackRate or repeated seeks.
@@ -508,6 +511,12 @@ class LudivionHallHeading extends Component {
 }
 
 export default apiInitializer((api) => {
+  const owner = getOwner(api.container.lookup("service:router"));
+  if (!owner.hasRegistration("service:ludivion-music")) {
+    owner.register("service:ludivion-music", ForumMusicService);
+  }
+  owner.lookup("service:ludivion-music").configure(settings.theme_uploads);
+  api.renderInOutlet("before-header-panel", ForumMusic);
   // Discourse's own display hook removes the generic welcome/search banner
   // only from the branded latest view, without changing a site setting.
   api.registerValueTransformer("welcome-banner-display-for-route", ({ value, context }) =>

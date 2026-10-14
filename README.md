@@ -17,6 +17,39 @@ Default** therefore needs that one-time selection. The component fixes in this
 revision also support Light Default; they do not replace global Discourse color
 variables or change the server's settings from JavaScript.
 
+Before installing or updating a revision containing background video/music, go to
+**Admin → Settings**, search for **theme authorized extensions**
+(`theme_authorized_extensions`), and append `webm`, `mp4` and `mp3` to the existing
+list. Save, then retry the theme update. Discourse's default list excludes video
+formats, so otherwise the import fails with `Error creating upload asset:
+forum_hero_video`. This setting applies to theme uploads; changing the ordinary
+post-upload `authorized_extensions` setting does not resolve this theme error.
+
+## Music controls
+
+The public header includes a compact music player. On wide screens it shows the
+track name and previous/play/next controls. Narrow screens and the sticky topic
+header use one music button opening the full controls, with 44px touch targets.
+Shuffle, repeat-one/playlist, volume, playback status and the track name are
+available in the panel. Labels are English; no translation catalogs are added.
+
+The two-deck player and queue are adapted from `ludivion-web`'s launch music.
+Fresh visits start at 20% with a 2.5-second fade; switching tracks crossfades for
+up to 5 seconds. Autoplay may require the first click/tap. Preferences and the
+selected track are saved under `ludivion_forum_music_v1`, separately from the
+website; an explicit pause remains paused. A full page reload starts the saved
+track from the beginning, while forum navigation retains the playback position.
+The application-owned service keeps a single player across header remounts,
+pauses on hidden tabs and Admin/auth routes, and resumes on public routes if
+music is enabled. Route changes do not halve the user's volume.
+
+The six MP3s are bundled in `assets/music/` and resolved through theme-upload
+URLs. Web Audio controls gain rather than relying on mobile media-element volume.
+Cross-origin CDN uploads must permit CORS; audio requests use anonymous CORS.
+If a track fails, the queue skips it; a wholly unavailable playlist shows an
+error with working retry controls. Escape closes the panel and restores focus;
+outside clicks close it without stealing focus.
+
 ## Homepage and counts
 
 - The route shell in `below-site-header` contains body classes and decorative
@@ -60,10 +93,10 @@ An FFmpeg executable outside PATH can be selected with `FFMPEG_BIN`.
 
 ## Verification
 
-The category counting tests require Node.js 22 or newer:
+The category counting and music tests require Node.js 22 or newer:
 
 ```sh
-node --test tests/category-topic-count.test.mjs
+npm test
 ```
 
 After updating the installed theme, check:
@@ -93,6 +126,11 @@ After updating the installed theme, check:
    description editing in both editor modes, flair upload/preview and saving at
    desktop and mobile widths. Configured flair colors and native permissions
    remain intact; management checks require an authorized group owner or admin.
+9. Music on desktop/mobile, guest/member headers and sticky topic titles:
+   verify play/pause, volume, previous/next, shuffle/repeat, panel focus/closing,
+   first-tap unlock and fade/crossfade. Navigate between public pages without a
+   restart; Admin and hidden tabs pause. Check saved disabled/volume settings,
+   missing-track handling and the unchanged native search/user menus.
 
 Local CSS fixtures can validate colors and geometry against the deployed core
 styles. They do not replace these checks in a running Discourse application.
