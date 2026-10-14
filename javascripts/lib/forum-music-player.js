@@ -2,7 +2,7 @@
 import { ForumMusicQueue } from "./forum-music-queue.js";
 export const FORUM_MUSIC_STORAGE_KEY = "ludivion_forum_music_v1";
 export const FORUM_MUSIC_DEFAULT_VOLUME = 0.2;
-export const FORUM_MUSIC_FADE_IN_SECONDS = 2.5;
+export const FORUM_MUSIC_FADE_IN_SECONDS = 0.6;
 export const FORUM_MUSIC_CROSSFADE_SECONDS = 5;
 export const FORUM_MUSIC_TRACKS = [
   {

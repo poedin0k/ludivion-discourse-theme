@@ -169,7 +169,7 @@ function fixture(t, stored = null, random = () => 0.37, options = {}) {
   };
 }
 
-test("fresh visits autoplay at 20% through a 2.5-second fade from silence", async (t) => {
+test("fresh visits autoplay at 20% through a short 0.6-second fade from silence", async (t) => {
   const f = fixture(t);
   f.player.start();
   await f.flush();
@@ -190,7 +190,7 @@ test("fresh visits autoplay at 20% through a 2.5-second fade from silence", asyn
   assert.deepEqual(f.lastRamp(f.nodes[0]), {
     kind: "ramp",
     value: 0.2,
-    time: 2.5,
+    time: 0.6,
   });
 });
 

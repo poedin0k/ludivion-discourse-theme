@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { scheduleOnce } from "@ember/runloop";
 import { tracked } from "@glimmer/tracking";
 import {
   ForumMusicPlayer,
@@ -22,7 +23,11 @@ export default class ForumMusicService extends Service {
   uploads = null;
 
   get isPublic() {
-    const path = (this.router.currentURL || "/").split(/[?#]/, 1)[0];
+    // Initializers run before the router has published its first URL.
+    const routeURL = this.router.currentRouteName
+      ? this.router.currentURL
+      : window.location?.pathname;
+    const path = (routeURL || this.router.currentURL || "/").split(/[?#]/, 1)[0];
     return (
       !this.router.currentRouteName?.startsWith("admin") &&
       !/^\/(admin|login|signup|password-reset|activate-account|invite)(\/|$)/.test(
@@ -33,10 +38,18 @@ export default class ForumMusicService extends Service {
 
   configure(uploads) {
     this.uploads = uploads;
+    // Start loading the first song during application boot, rather than waiting
+    // for the header and discovery content. State publication stays outside render.
+    scheduleOnce("afterRender", this, this.ensureStarted);
   }
 
   ensureStarted() {
-    if (this.player || !this.isPublic) {
+    if (
+      this.isDestroying ||
+      this.isDestroyed ||
+      this.player ||
+      !this.isPublic
+    ) {
       return;
     }
     const trackUrls = FORUM_MUSIC_TRACKS.map(

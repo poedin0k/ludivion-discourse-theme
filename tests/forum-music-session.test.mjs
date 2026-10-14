@@ -51,6 +51,13 @@ function fixture(
     globalThis.window = previous.window;
   });
   const players = [];
+  const scheduled = [];
+  const scheduleOnce = (queue, target, fn) => {
+    assert.equal(queue, "afterRender");
+    if (!scheduled.some((item) => item.target === target && item.fn === fn)) {
+      scheduled.push({ target, fn });
+    }
+  };
   class Player {
     constructor(options) {
       this.options = options;
@@ -82,6 +89,7 @@ function fixture(
     "FORUM_MUSIC_STORAGE_KEY",
     "FORUM_MUSIC_TRACKS",
     "parseForumMusicSettings",
+    "scheduleOnce",
     `${serviceSource}\nreturn ForumMusicService;`,
   )(
     class {
@@ -91,6 +99,7 @@ function fixture(
     FORUM_MUSIC_STORAGE_KEY,
     FORUM_MUSIC_TRACKS,
     parseForumMusicSettings,
+    scheduleOnce,
   );
   const listeners = new Set();
   const router = {
@@ -111,8 +120,40 @@ function fixture(
     router.currentRouteName = name;
     for (const fn of listeners) fn();
   };
-  return { service, players, router, route, window, document };
+  const runStartup = () => {
+    for (const { target, fn } of scheduled.splice(0)) fn.call(target);
+  };
+  return { service, players, router, route, window, document, runStartup };
 }
+
+test("application boot starts the first song before any header controls mount", (t) => {
+  const f = fixture(t);
+  f.router.currentURL = undefined;
+  f.router.currentRouteName = undefined;
+  f.window.location = { pathname: "/" };
+  assert.equal(f.players.length, 0);
+  f.runStartup();
+  assert.equal(f.players.length, 1);
+  assert.deepEqual(f.players[0].visibility, [true]);
+  f.service.ensureStarted();
+  assert.equal(f.players.length, 1);
+});
+
+test("boot uses the real initial URL to avoid starting music on Admin before routing", (t) => {
+  const f = fixture(t);
+  f.router.currentURL = "/";
+  f.router.currentRouteName = undefined;
+  f.window.location = { pathname: "/admin/dashboard" };
+  f.runStartup();
+  assert.equal(f.players.length, 0);
+});
+
+test("queued startup cannot create audio after application teardown begins", (t) => {
+  const f = fixture(t);
+  f.service.isDestroying = true;
+  f.runStartup();
+  assert.equal(f.players.length, 0);
+});
 
 test("header remounts and public navigation retain one player and its upload sources", (t) => {
   const f = fixture(t);

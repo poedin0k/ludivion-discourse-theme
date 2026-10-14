@@ -34,11 +34,13 @@ Shuffle, repeat-one/playlist, volume, playback status and the track name are
 available in the panel. Labels are English; no translation catalogs are added.
 
 The two-deck player and queue are adapted from `ludivion-web`'s launch music.
-Fresh visits start at 20% with a 2.5-second fade; switching tracks crossfades for
+Fresh visits start at 20% with a 0.6-second fade; switching tracks crossfades for
 up to 5 seconds. Autoplay may require the first click/tap. Preferences and the
 selected track are saved under `ludivion_forum_music_v1`, separately from the
 website; an explicit pause remains paused. A full page reload starts the saved
 track from the beginning, while forum navigation retains the playback position.
+The service starts during application boot without waiting for the header or
+discovery content to mount. The MP3's own introduction is preserved.
 The application-owned service keeps a single player across header remounts,
 pauses on hidden tabs and Admin/auth routes, and resumes on public routes if
 music is enabled. Route changes do not halve the user's volume.
