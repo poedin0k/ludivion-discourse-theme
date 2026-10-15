@@ -10,8 +10,8 @@ import categoryTopicCount from "../lib/category-topic-count";
 import ForumMusicService from "../lib/forum-music-service";
 import ForumMusic from "../components/forum-music";
 
-// The single MP4 contains forward + reverse frames. Native looping repeats
-// that sequence without runtime seeking; the static backdrop stays underneath.
+// The single MP4 contains forward + reverse frames, both retimed to half speed.
+// Native looping repeats that sequence without runtime seeking or rate changes.
 const homepageBackdropVideo = modifier((video, [uploads]) => {
   const document = video.ownerDocument;
   const motion = document.defaultView.matchMedia("(prefers-reduced-motion: reduce)");
@@ -24,8 +24,8 @@ const homepageBackdropVideo = modifier((video, [uploads]) => {
   video.muted = true;
   video.defaultMuted = true;
   video.loop = true;
-  video.defaultPlaybackRate = 0.7;
-  video.playbackRate = 0.7;
+  video.defaultPlaybackRate = 1;
+  video.playbackRate = 1;
   video.playsInline = true;
   video.poster = uploads?.forum_hero || "";
 

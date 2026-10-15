@@ -78,12 +78,15 @@ outside clicks close it without stealing focus.
 The homepage uses `assets/forum-hero.mp4` as its only video source. This silent
 MP4 contains the full forward pass followed by the reversed frames. Turnaround
 frames are not duplicated: native looping repeats the forward/reverse sequence
-without a jump from the last frame to the first. It retains 3840×2160 at 24 fps,
-uses H.264 with fast-start metadata, and has no audio track.
-Playback runs at 0.7× speed in both directions (30% slower); the complete
-10-second sequence therefore takes about 14.3 seconds per cycle.
+without a jump from the last frame to the first. It retains 3840×2160, uses
+H.264 with fast-start metadata, and has no audio track.
+Both directions are retimed inside the MP4 to 50% of the original speed:
+the same 240 frames now span 20 seconds at 12 fps. Frame timestamps and durations
+are doubled without re-encoding the image. Browser playback stays at 1×, so the
+slowdown applies equally to both halves without depending on runtime rate changes.
 When replacing this asset, prepare the same forward/reverse sequence inside the
-single MP4; the browser does not reverse an ordinary forward-only clip.
+single MP4, with both halves retimed to half speed; the browser does not reverse
+or slow down an ordinary forward-only clip.
 `forum-hero.webp` remains visible until playback starts, and on download,
 decoding or autoplay failure. Category/topic pages continue using the image.
 Reduced-motion preferences keep the image and prevent video loading; playback
