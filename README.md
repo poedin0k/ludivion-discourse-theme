@@ -75,9 +75,13 @@ outside clicks close it without stealing focus.
 
 ## Homepage background video
 
-The homepage uses `assets/forum-hero.mp4` as its only video source, muted and
-looped natively. Replace this file directly when updating the video; no reverse
-processing or generated loop variants are used.
+The homepage uses `assets/forum-hero.mp4` as its only video source. This silent
+MP4 contains the full forward pass followed by the reversed frames. Turnaround
+frames are not duplicated: native looping repeats the forward/reverse sequence
+without a jump from the last frame to the first. It retains 3840×2160 at 24 fps,
+uses H.264 with fast-start metadata, and has no audio track.
+When replacing this asset, prepare the same forward/reverse sequence inside the
+single MP4; the browser does not reverse an ordinary forward-only clip.
 `forum-hero.webp` remains visible until playback starts, and on download,
 decoding or autoplay failure. Category/topic pages continue using the image.
 Reduced-motion preferences keep the image and prevent video loading; playback
@@ -96,7 +100,7 @@ After updating the installed theme, check:
 1. Home at desktop and mobile widths: sidebar starts under the header, cards
    align with the topic list, and the sidebar toggle still works. Below the hero
    search, check the three social links, icons and keyboard focus. Check silent
-   muted MP4 looping and image fallback while loading or on playback failure,
+   forward/reverse MP4 looping and image fallback while loading or on playback failure,
    reduced-motion behavior and navigation away from/back to the homepage.
 2. Topic pagination and returning from a topic: no light row flash.
 3. Login and signup: dark header, fully visible logo, readable fields.
