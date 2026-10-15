@@ -10,16 +10,13 @@ import categoryTopicCount from "../lib/category-topic-count";
 import ForumMusicService from "../lib/forum-music-service";
 import ForumMusic from "../components/forum-music";
 
-// The asset already contains forward + reverse frames. Native looping keeps
-// playback smooth without unsupported negative playbackRate or repeated seeks.
+// One supplied MP4 loops natively; the static backdrop remains underneath it.
 const homepageBackdropVideo = modifier((video, [uploads]) => {
   const document = video.ownerDocument;
   const motion = document.defaultView.matchMedia("(prefers-reduced-motion: reduce)");
-  const sources = [
-    [uploads?.forum_hero_video, "video/webm"],
-    [uploads?.forum_hero_video_mp4, "video/mp4"],
-  ].filter(([url, type]) => url && video.canPlayType(type));
-  let sourceIndex = 0;
+  const source = uploads?.forum_hero_video;
+  const supported = source && video.canPlayType("video/mp4");
+  let failed = false;
   let disposed = false;
   let request = 0;
 
@@ -36,7 +33,7 @@ const homepageBackdropVideo = modifier((video, [uploads]) => {
     }
   };
   const play = () => {
-    if (disposed || motion.matches || document.hidden || !sources[sourceIndex]) {
+    if (disposed || failed || motion.matches || document.hidden || !supported) {
       return;
     }
     const currentRequest = ++request;
@@ -49,17 +46,18 @@ const homepageBackdropVideo = modifier((video, [uploads]) => {
   };
   const load = () => {
     hide();
-    if (motion.matches || !sources[sourceIndex]) {
+    if (motion.matches || !supported) {
       return;
     }
-    video.src = sources[sourceIndex][0];
+    video.src = source;
     video.load();
     play();
   };
-  const failed = () => {
+  const playbackFailed = () => {
+    failed = true;
+    request++;
     hide();
-    sourceIndex++;
-    load(); // Try MP4 if WebM is advertised but cannot actually be decoded.
+    video.pause();
   };
   const visibilityChanged = () => {
     if (document.hidden) {
@@ -77,13 +75,13 @@ const homepageBackdropVideo = modifier((video, [uploads]) => {
       video.removeAttribute("src");
       video.load();
     } else {
-      sourceIndex = 0;
+      failed = false;
       load();
     }
   };
 
   video.addEventListener("playing", reveal);
-  video.addEventListener("error", failed);
+  video.addEventListener("error", playbackFailed);
   document.addEventListener("visibilitychange", visibilityChanged);
   motion.addEventListener("change", motionChanged);
   load();
@@ -92,7 +90,7 @@ const homepageBackdropVideo = modifier((video, [uploads]) => {
     disposed = true;
     request++;
     video.removeEventListener("playing", reveal);
-    video.removeEventListener("error", failed);
+    video.removeEventListener("error", playbackFailed);
     document.removeEventListener("visibilitychange", visibilityChanged);
     motion.removeEventListener("change", motionChanged);
     video.pause();

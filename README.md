@@ -19,7 +19,7 @@ variables or change the server's settings from JavaScript.
 
 Before installing or updating a revision containing background video/music, go to
 **Admin → Settings**, search for **theme authorized extensions**
-(`theme_authorized_extensions`), and append `webm`, `mp4` and `mp3` to the existing
+(`theme_authorized_extensions`), and append `mp4` and `mp3` to the existing
 list. Save, then retry the theme update. Discourse's default list excludes video
 formats, so otherwise the import fails with `Error creating upload asset:
 forum_hero_video`. This setting applies to theme uploads; changing the ordinary
@@ -75,23 +75,13 @@ outside clicks close it without stealing focus.
 
 ## Homepage background video
 
-The homepage uses the silent `forum-hero-loop.webm` asset, with an H.264 MP4
-alternative for browsers that cannot play WebM. Both contain a forward pass
-followed by the reversed frames; native looping repeats this complete sequence.
-The original `assets/forum-hero.webm` remains the source, not the served asset.
+The homepage uses `assets/forum-hero.mp4` as its only video source, muted and
+looped natively. Replace this file directly when updating the video; no reverse
+processing or generated loop variants are used.
 `forum-hero.webp` remains visible until playback starts, and on download,
 decoding or autoplay failure. Category/topic pages continue using the image.
 Reduced-motion preferences keep the image and prevent video loading; playback
 pauses when the tab is hidden and is cleaned up when leaving the homepage.
-
-After replacing the source, regenerate both served assets with Node.js and
-FFmpeg (including the `libvpx-vp9` and `libx264` encoders):
-
-```sh
-node scripts/build-hero-video.mjs
-```
-
-An FFmpeg executable outside PATH can be selected with `FFMPEG_BIN`.
 
 ## Verification
 
@@ -106,7 +96,7 @@ After updating the installed theme, check:
 1. Home at desktop and mobile widths: sidebar starts under the header, cards
    align with the topic list, and the sidebar toggle still works. Below the hero
    search, check the three social links, icons and keyboard focus. Check silent
-   forward/reverse video playback, image fallback while loading, MP4 recovery,
+   muted MP4 looping and image fallback while loading or on playback failure,
    reduced-motion behavior and navigation away from/back to the homepage.
 2. Topic pagination and returning from a topic: no light row flash.
 3. Login and signup: dark header, fully visible logo, readable fields.
