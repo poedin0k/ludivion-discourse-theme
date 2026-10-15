@@ -24,6 +24,8 @@ const homepageBackdropVideo = modifier((video, [uploads]) => {
   video.muted = true;
   video.defaultMuted = true;
   video.loop = true;
+  video.defaultPlaybackRate = 0.7;
+  video.playbackRate = 0.7;
   video.playsInline = true;
   video.poster = uploads?.forum_hero || "";
 

@@ -80,6 +80,8 @@ MP4 contains the full forward pass followed by the reversed frames. Turnaround
 frames are not duplicated: native looping repeats the forward/reverse sequence
 without a jump from the last frame to the first. It retains 3840×2160 at 24 fps,
 uses H.264 with fast-start metadata, and has no audio track.
+Playback runs at 0.7× speed in both directions (30% slower); the complete
+10-second sequence therefore takes about 14.3 seconds per cycle.
 When replacing this asset, prepare the same forward/reverse sequence inside the
 single MP4; the browser does not reverse an ordinary forward-only clip.
 `forum-hero.webp` remains visible until playback starts, and on download,
