@@ -132,6 +132,9 @@ After updating the installed theme, check:
    first-tap unlock and fade/crossfade. Navigate between public pages without a
    restart; Admin and hidden tabs pause. Check saved disabled/volume settings,
    missing-track handling and the unchanged native search/user menus.
+10. Header language switcher: readable trigger and language names at rest,
+    on hover, keyboard focus and touch press; the current language remains
+    visibly selected. Verify selection still changes the locale and reloads.
 
 Local CSS fixtures can validate colors and geometry against the deployed core
 styles. They do not replace these checks in a running Discourse application.

@@ -2392,6 +2392,62 @@ body.ludivion-public {
     color: var(--lud-bronze);
   }
 
+  /* Core uses header/primary palette colors directly in this menu's states. */
+  .d-header .language-switcher-trigger {
+    --header_primary: var(--lud-gold-bright);
+    --header_primary-high: var(--lud-muted);
+    --header_primary-low-mid: var(--lud-border);
+    --header_primary-medium: var(--lud-border-strong);
+    color: var(--lud-muted);
+    background-color: var(--lud-bg-raised);
+    border-color: var(--lud-border);
+
+    &:is(:hover, :focus-visible, [aria-expanded="true"]) {
+      color: var(--lud-gold-bright);
+      background-color: var(--lud-panel-raised);
+      border-color: var(--lud-border-strong);
+
+      .language-switcher__locale,
+      .d-icon {
+        color: var(--lud-gold-bright);
+      }
+    }
+  }
+
+  .language-switcher-content {
+    --primary: var(--lud-text);
+    --d-hover: var(--lud-panel-raised);
+    --d-selected: var(--lud-selected);
+    --d-selected-text-color: var(--lud-gold-bright);
+
+    .locale-options .btn {
+      color: var(--lud-text);
+      background-color: transparent;
+      border-color: transparent;
+      text-align: start;
+
+      &:is(:hover, :focus-visible, :active) {
+        color: var(--lud-gold-bright);
+        background-color: var(--lud-panel-raised);
+      }
+
+      &:focus-visible {
+        outline-offset: -2px;
+      }
+    }
+
+    .locale-options.--selected .btn {
+      color: var(--lud-gold-bright);
+      background-color: var(--lud-selected);
+      box-shadow: inset 2px 0 var(--lud-gold);
+
+      &:is(:hover, :focus-visible, :active) {
+        color: var(--lud-ivory);
+        background-color: var(--lud-cta);
+      }
+    }
+  }
+
   .user-menu {
     --d-unread-notification-background: var(--lud-selected);
 
