@@ -333,6 +333,9 @@ body:is(
     padding-inline-end: 8px;
 
     span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: var(--lud-muted);
       font-size: 0.65rem;
     }
@@ -1274,6 +1277,7 @@ body.ludivion-public :is(.alert-success, .success) {
   position: relative;
   display: block;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .ludivion-hall-card__activity {

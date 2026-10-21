@@ -6,6 +6,8 @@ import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import { apiInitializer } from "discourse/lib/api";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
+import I18n, { i18n } from "discourse-i18n";
+import { themePrefix } from "virtual:theme";
 import categoryTopicCount from "../lib/category-topic-count";
 import ForumMusicService from "../lib/forum-music-service";
 import ForumMusic from "../components/forum-music";
@@ -157,55 +159,30 @@ const topicReadingProgress = modifier((element, [routeURL]) => {
 const HALLS = [
   {
     number: "I",
-    code: "ORI // 01",
-    title: "ORI’S PROPHECY",
-    description:
-      "Official knowledge, announcements, rules and visions of Ludivion.",
-    subtitle: "OFFICIAL KNOWLEDGE / ANNOUNCEMENTS / RULES",
     slugs: ["oris-prophecy", "ori-s-prophecy", "ori-prophecy"],
     names: ["ori's prophecy", "ori’s prophecy"],
     identity: "oracle",
   },
   {
     number: "II",
-    code: "PATH // 02",
-    title: "JOURNEY THROUGH LUDIVION",
-    description:
-      "Progression, quests, events, achievements, currencies and relics.",
-    subtitle: "QUESTS / PROGRESSION / RELICS",
     slugs: ["journey-through-ludivion"],
     names: ["journey through ludivion"],
     identity: "journey",
   },
   {
     number: "III",
-    code: "SEEK // 03",
-    title: "SEEKERS’ HALL",
-    description:
-      "Guides, answers, strategies and knowledge gathered by the community.",
-    subtitle: "GUIDES / ANSWERS / COMMUNITY KNOWLEDGE",
     slugs: ["seekers-hall", "seekers"],
     names: ["seekers' hall", "seekers’ hall"],
     identity: "seekers",
   },
   {
     number: "IV",
-    code: "SYSTEM // 04",
-    title: "TECHNICAL DISCUSSIONS",
-    description:
-      "Developer notes, technical help, bug reports and product feedback.",
-    subtitle: "SYSTEMS / SUPPORT / ENGINEERING",
     slugs: ["technical-discussions"],
     names: ["technical discussions"],
     identity: "technical",
   },
   {
     number: "V",
-    code: "CITY // 05",
-    title: "THE COMMONS",
-    description:
-      "The social heart of Ludivion: discussion, stories and milestones.",
-    subtitle: "STORIES / DISCUSSION / MILESTONES",
     slugs: ["the-commons", "commons"],
     names: ["the commons"],
     identity: "commons",
@@ -220,9 +197,20 @@ function normalized(value) {
     .replace(/^-|-$/g, "");
 }
 
+// Keep category identity/routing independent of translated display labels.
+function localizeHall(hall) {
+  return {
+    ...hall,
+    code: i18n(themePrefix(`halls.${hall.identity}.code`)),
+    title: i18n(themePrefix(`halls.${hall.identity}.title`)),
+    description: i18n(themePrefix(`halls.${hall.identity}.description`)),
+    subtitle: i18n(themePrefix(`halls.${hall.identity}.subtitle`)),
+  };
+}
+
 class LudivionHomeLogo extends Component {
   <template>
-    <a class="ludivion-home-logo" href="/" aria-label="Ludivion community home">
+    <a class="ludivion-home-logo" href="/" aria-label={{i18n (themePrefix "brand.home_label")}}>
       <span class="ludivion-home-logo__mark" aria-hidden="true"></span>
       <span class="ludivion-home-logo__wordmark" aria-hidden="true">LUDIVION</span>
     </a>
@@ -275,7 +263,7 @@ class LudivionCommunityState extends Component {
       const count = categoryTopicCount(category, categories);
 
       return {
-        ...hall,
+        ...localizeHall(hall),
         // A missing/private category still has a working navigation target.
         href: category?.url || (category?.slug ? "/c/" + category.slug : "/categories"),
         categoryPath: category?.path,
@@ -283,7 +271,10 @@ class LudivionCommunityState extends Component {
         // Include visible descendants; missing data stays missing, not zero.
         activityLabel:
           Number.isInteger(count) && count >= 0
-            ? count.toLocaleString() + (count === 1 ? " TOPIC" : " TOPICS")
+            ? i18n(themePrefix("halls.topic_count"), {
+                count,
+                formatted_count: count.toLocaleString(I18n.locale.replace(/_/g, "-")),
+              })
             : null,
       };
     });
@@ -353,20 +344,20 @@ class LudivionHome extends LudivionCommunityState {
       <div class="ludivion-home-intro">
         {{#if settings.show_homepage_hero}}
           <section class="ludivion-forum-hero" aria-labelledby="ludivion-hero-title">
-            <div class="ludivion-forum-hero__eyebrow">LUDIVION COMMUNITY NETWORK</div>
-            <h1 id="ludivion-hero-title">THE CITY SPEAKS</h1>
-            <p>Knowledge, strategy and voices from across Ludivion.</p>
+            <div class="ludivion-forum-hero__eyebrow">{{i18n (themePrefix "hero.eyebrow")}}</div>
+            <h1 id="ludivion-hero-title">{{i18n (themePrefix "hero.title")}}</h1>
+            <p>{{i18n (themePrefix "hero.description")}}</p>
             <div class="ludivion-forum-hero__rule" aria-hidden="true"></div>
-            <span class="ludivion-forum-hero__motto">DISCUSS · EXPLORE · BUILD · BELONG</span>
+            <span class="ludivion-forum-hero__motto">{{i18n (themePrefix "hero.motto")}}</span>
             {{#if this.site.can_search}}
               <div class="ludivion-archive-search {{if settings.show_oracle_terminal 'ludivion-oracle-terminal'}}">
                 {{#if settings.show_oracle_terminal}}
                   <span class="ludivion-oracle-terminal__eyebrow">
                     <span class="ludivion-oracle-terminal__status" aria-hidden="true"></span>
-                    ORACLE ARCHIVE
+                    {{i18n (themePrefix "archive.eyebrow")}}
                   </span>
                 {{/if}}
-                <label for="ludivion-archive-search-input">SEARCH THE ARCHIVES</label>
+                <label for="ludivion-archive-search-input">{{i18n (themePrefix "archive.label")}}</label>
                 <div class="ludivion-archive-search__input">
                   {{#if settings.show_oracle_terminal}}
                     <span class="ludivion-oracle-terminal__icon" aria-hidden="true">{{dIcon "magnifying-glass"}}</span>
@@ -377,17 +368,17 @@ class LudivionHome extends LudivionCommunityState {
                   />
                 </div>
                 {{#if settings.show_oracle_terminal}}
-                  <span class="ludivion-oracle-terminal__helper">Query the City's recorded knowledge.</span>
+                  <span class="ludivion-oracle-terminal__helper">{{i18n (themePrefix "archive.helper")}}</span>
                 {{/if}}
               </div>
             {{/if}}
-            <nav class="ludivion-home-social" aria-label="Ludivion social links">
+            <nav class="ludivion-home-social" aria-label={{i18n (themePrefix "social.label")}}>
               <a
                 class="ludivion-home-social__link"
                 href="https://x.com/ludivion_hub"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Ludivion on X"
+                aria-label={{i18n (themePrefix "social.x")}}
                 title="X"
               >
                 <span class="ludivion-home-social__icon ludivion-home-social__icon--x" aria-hidden="true"></span>
@@ -397,7 +388,7 @@ class LudivionHome extends LudivionCommunityState {
                 href="https://discord.gg/ludivion"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Ludivion on Discord"
+                aria-label={{i18n (themePrefix "social.discord")}}
                 title="Discord"
               >
                 <span class="ludivion-home-social__icon ludivion-home-social__icon--discord" aria-hidden="true"></span>
@@ -407,7 +398,7 @@ class LudivionHome extends LudivionCommunityState {
                 href="https://ludivion.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Visit Ludivion"
+                aria-label={{i18n (themePrefix "social.website")}}
                 title="Ludivion"
               >
                 <span class="ludivion-home-social__icon ludivion-home-social__icon--ludivion" aria-hidden="true"></span>
@@ -419,9 +410,9 @@ class LudivionHome extends LudivionCommunityState {
         {{#if settings.show_hall_cards}}
           <section class="ludivion-halls" aria-labelledby="ludivion-halls-title">
             <header class="ludivion-halls__header">
-              <span class="ludivion-halls__eyebrow">COMMUNITY HALLS</span>
-              <h2 id="ludivion-halls-title">CHOOSE YOUR HALL</h2>
-              <p>Every hall carries a different voice of the City.</p>
+              <span class="ludivion-halls__eyebrow">{{i18n (themePrefix "halls.eyebrow")}}</span>
+              <h2 id="ludivion-halls-title">{{i18n (themePrefix "halls.title")}}</h2>
+              <p>{{i18n (themePrefix "halls.description")}}</p>
             </header>
             <div class="ludivion-halls__grid">
               {{#each this.hallCards as |hall|}}
@@ -446,7 +437,7 @@ class LudivionHome extends LudivionCommunityState {
                       {{/if}}
                     {{/if}}
                     {{#unless hall.available}}
-                      <span class="ludivion-hall-card__fallback">Browse all halls →</span>
+                      <span class="ludivion-hall-card__fallback">{{i18n (themePrefix "halls.browse_all")}}</span>
                     {{/unless}}
                   </span>
                   <span class="ludivion-hall-card__arrow" aria-hidden="true">↗</span>
@@ -474,8 +465,8 @@ class LudivionLatestHeading extends Component {
   <template>
     {{#if this.show}}
       <div class="ludivion-latest-heading">
-        <span>COMMUNITY ARCHIVE // LIVE</span>
-        <h2>LATEST FROM THE CITY</h2>
+        <span>{{i18n (themePrefix "latest.eyebrow")}}</span>
+        <h2>{{i18n (themePrefix "latest.title")}}</h2>
       </div>
     {{/if}}
   </template>
@@ -489,11 +480,12 @@ class LudivionHallHeading extends Component {
       return null;
     }
 
-    return HALLS.find(
+    const hall = HALLS.find(
       (hall) =>
         hall.slugs.some((slug) => normalized(slug) === normalized(category.slug)) ||
         hall.names.some((name) => normalized(name) === normalized(category.name))
     );
+    return hall ? localizeHall(hall) : null;
   }
 
   <template>
@@ -501,7 +493,7 @@ class LudivionHallHeading extends Component {
       <div class="ludivion-hall-heading">
         <span class="ludivion-hall-heading__sigil" aria-hidden="true">{{this.hall.number}}</span>
         <div class="ludivion-hall-heading__content">
-          <span class="ludivion-hall-heading__code">HALL {{this.hall.code}}</span>
+          <span class="ludivion-hall-heading__code">{{i18n (themePrefix "halls.heading_code") code=this.hall.code}}</span>
           <h1>{{this.hall.title}}</h1>
           <p class="ludivion-hall-heading__subtitle">{{this.hall.subtitle}}</p>
           <p class="ludivion-hall-heading__description">{{this.hall.description}}</p>

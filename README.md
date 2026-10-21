@@ -31,7 +31,8 @@ The public header includes a compact music player. On wide screens it shows the
 track name and previous/play/next controls. Narrow screens and the sticky topic
 header use one music button opening the full controls, with 44px touch targets.
 Shuffle, repeat-one/playlist, volume, playback status and the track name are
-available in the panel. Labels are English; no translation catalogs are added.
+available in the panel. Controls and statuses follow the active Discourse locale;
+the six original track titles remain unchanged.
 
 The two-deck player and queue are adapted from `ludivion-web`'s launch music.
 Fresh visits start at 20% with a 0.6-second fade; switching tracks crossfades for
@@ -51,6 +52,27 @@ Cross-origin CDN uploads must permit CORS; audio requests use anonymous CORS.
 If a track fails, the queue skips it; a wholly unavailable playlist shows an
 error with working retry controls. Escape closes the panel and restores focus;
 outside clicks close it without stealing focus.
+
+## Translations
+
+Public theme text uses Discourse's native `i18n` with the theme namespace:
+homepage/search/social labels, Hall cards and category headings, topic counts,
+latest heading and all music controls, statuses, tooltips and accessibility labels.
+Catalogs are in `locales/`: English fallback plus Spanish (`es`), Russian (`ru`),
+German (`de`), French (`fr`), Italian (`it`), Japanese (`ja`), Simplified Chinese
+(`zh_CN`), Portuguese (`pt` and `pt_BR`), Korean (`ko`) and Turkish (`tr_TR`).
+
+The existing Discourse language switcher chooses the same locale for the theme.
+Its normal reload also loads these translations; no separate language preference,
+DOM text replacement or translation API is used. A missing translation falls back
+through Discourse to English. Native categories/posts retain Discourse's own
+content translations; the theme catalogs cover the custom Hall copy. Routing
+identifiers, category matching, brand names and track metadata stay stable.
+Numbers, percentages and topic-count plural forms use the active locale.
+
+After updating the theme, reload and check the homepage, a top-level category
+heading and the open music panel in each enabled language. Native language
+settings still determine which languages are offered by the switcher.
 
 ## Homepage and counts
 
@@ -94,9 +116,11 @@ pauses when the tab is hidden and is cleaned up when leaving the homepage.
 
 ## Verification
 
-The category counting and music tests require Node.js 22 or newer:
+The tests require Node.js 22 or newer. Install the YAML validation dev dependency
+once (or after changing the lockfile):
 
 ```sh
+npm ci
 npm test
 ```
 
